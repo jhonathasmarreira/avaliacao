@@ -102,6 +102,11 @@ export function SimuladorPage() {
 
           <div className="simulador-sandbox">
             <p className="simulador-sandbox-titulo">App sob teste</p>
+            <p className="simulador-sandbox-legenda">
+              Aplicação financeira fictícia que seu código testa. Ela tem seu próprio login (nome/e-mail
+              de mentira) — diferente da sua identificação — que quase todo teste precisa passar antes de
+              chegar no Dashboard.
+            </p>
             <SandboxFrame onReady={handleReady} />
           </div>
         </div>

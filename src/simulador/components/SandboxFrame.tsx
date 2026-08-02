@@ -45,6 +45,11 @@ export function SandboxFrame({ onReady }: Props) {
   }, [aguardarCarregamento]);
 
   useEffect(() => {
+    // O iframe é same-origin com a casca do simulador, então window.localStorage
+    // aqui já é o mesmo storage físico do app sob teste — não é preciso esperar
+    // o iframe carregar para limpar a chave dele.
+    const limparStorageApp = () => window.localStorage.removeItem(APP_STORAGE_KEY);
+
     const controller: SandboxController = {
       getDocument: () => {
         const doc = iframeRef.current?.contentDocument;
@@ -56,11 +61,9 @@ export function SandboxFrame({ onReady }: Props) {
         if (!win) throw new Error('Sandbox indisponível.');
         return win;
       },
-      clearAppStorage: () => {
-        iframeRef.current?.contentWindow?.localStorage.removeItem(APP_STORAGE_KEY);
-      },
+      clearAppStorage: limparStorageApp,
       reset: async () => {
-        iframeRef.current?.contentWindow?.localStorage.removeItem(APP_STORAGE_KEY);
+        limparStorageApp();
         await navegar();
       },
       reload: async () => {
@@ -68,6 +71,10 @@ export function SandboxFrame({ onReady }: Props) {
       },
     };
     onReady(controller);
+    // Limpa antes da primeira carga também: sem isso, o painel "App sob teste"
+    // podia exibir dados deixados por uma execução anterior no mesmo navegador,
+    // antes mesmo do candidato clicar em "Executar teste".
+    limparStorageApp();
     navegar().catch(() => {
       /* falha na carga inicial é reportada quando o candidato executar a primeira questão */
     });

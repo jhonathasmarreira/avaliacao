@@ -1,3 +1,5 @@
+import { AssertionError } from './asserts';
+
 export function simulateClick(el: HTMLElement): void {
   el.click();
 }
@@ -8,21 +10,36 @@ function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectE
   descriptor?.set?.call(el, value);
 }
 
-export function simulateType(el: HTMLInputElement | HTMLTextAreaElement, texto: string): void {
+// Os elementos vêm do document do iframe sandbox (outro realm de JS), então
+// `instanceof HTMLInputElement` do documento pai nunca bate — precisa checar
+// por tagName, que funciona independente do realm.
+function exigirDigitavel(el: Element): asserts el is HTMLInputElement | HTMLTextAreaElement {
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') return;
+  throw new AssertionError(
+    `.type()/.clear() falhou: <${el.tagName.toLowerCase()}> não é um campo digitável (esperado <input> ou <textarea>)`
+  );
+}
+
+export function simulateType(el: Element, texto: string): void {
+  exigirDigitavel(el);
   const atual = el.value ?? '';
   setNativeValue(el, atual + texto);
   el.dispatchEvent(new Event('input', { bubbles: true }));
   el.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
-export function simulateClear(el: HTMLInputElement | HTMLTextAreaElement): void {
+export function simulateClear(el: Element): void {
+  exigirDigitavel(el);
   setNativeValue(el, '');
   el.dispatchEvent(new Event('input', { bubbles: true }));
   el.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
-export function simulateSelect(el: HTMLSelectElement, valor: string): void {
-  setNativeValue(el, valor);
+export function simulateSelect(el: Element, valor: string): void {
+  if (el.tagName !== 'SELECT') {
+    throw new AssertionError(`.select() falhou: <${el.tagName.toLowerCase()}> não é um <select>`);
+  }
+  setNativeValue(el as HTMLSelectElement, valor);
   el.dispatchEvent(new Event('change', { bubbles: true }));
 }
 

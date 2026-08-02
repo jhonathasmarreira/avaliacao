@@ -257,6 +257,13 @@
   letter-spacing: 0.05em;
 }
 
+.simulador-sandbox-legenda {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
 .sandbox-frame {
   width: 100%;
   height: 440px;

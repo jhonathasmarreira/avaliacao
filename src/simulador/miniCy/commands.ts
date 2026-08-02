@@ -7,6 +7,7 @@ export interface CyRoot {
   contains(texto: string): Chainable;
   visit(caminho?: string): CyRoot;
   reload(): CyRoot;
+  wait(ms: number): CyRoot;
   clearLocalStorage(): CyRoot;
   Dado(texto: string): CyRoot;
   Quando(texto: string): CyRoot;
@@ -45,6 +46,12 @@ export function createCy(ctx: RunnerContext): CyRoot {
       pushTask(ctx, 'cy.reload()', async () => {
         await ctx.sandbox.reload();
       });
+      return cy;
+    },
+
+    wait: (ms: number) => {
+      const tempo = Math.max(0, Math.min(ms, 10000));
+      pushTask(ctx, `cy.wait(${ms})`, () => new Promise((resolve) => setTimeout(resolve, tempo)));
       return cy;
     },
 

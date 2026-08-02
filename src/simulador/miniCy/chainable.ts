@@ -50,19 +50,19 @@ export function createChainable(ctx: RunnerContext, derive: DeriveFn, opcoes: Op
     type: (texto: string) =>
       enqueue(`${descricao}.type('${texto}')`, async () => {
         const [el] = await pollUntil(() => resolveExisting(), { timeout: ctx.timeoutMs });
-        simulateType(el as HTMLInputElement, texto);
+        simulateType(el, texto);
       }),
 
     clear: () =>
       enqueue(`${descricao}.clear()`, async () => {
         const [el] = await pollUntil(() => resolveExisting(), { timeout: ctx.timeoutMs });
-        simulateClear(el as HTMLInputElement);
+        simulateClear(el);
       }),
 
     select: (valor: string) =>
       enqueue(`${descricao}.select('${valor}')`, async () => {
         const [el] = await pollUntil(() => resolveExisting(), { timeout: ctx.timeoutMs });
-        simulateSelect(el as HTMLSelectElement, valor);
+        simulateSelect(el, valor);
       }),
 
     should: (assertion: string, ...args: unknown[]) => {
