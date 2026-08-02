@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import type { Candidato, Fase, Resposta, StatusQuestao, LinhaLog } from '../types';
 import { QUESTOES } from '../questoes';
 
@@ -33,44 +32,41 @@ interface SimuladorState {
   setEnvioStatus: (status: EnvioStatus, motivo?: string) => void;
 }
 
-export const useSimuladorStore = create<SimuladorState>()(
-  persist(
-    (set) => ({
-      candidato: null,
-      fase: 'identificacao',
-      questaoAtual: 1,
-      respostas: respostasIniciais(),
-      envioStatus: 'idle',
+// Deliberadamente sem persist: cada carregamento de página (link novo ou F5)
+// deve começar a avaliação do zero, nunca retomar de onde parou.
+export const useSimuladorStore = create<SimuladorState>()((set) => ({
+  candidato: null,
+  fase: 'identificacao',
+  questaoAtual: 1,
+  respostas: respostasIniciais(),
+  envioStatus: 'idle',
 
-      identificar: (candidato) => set({ candidato, fase: 'simulador' }),
+  identificar: (candidato) => set({ candidato, fase: 'simulador' }),
 
-      irPara: (numero) => set({ questaoAtual: numero }),
+  irPara: (numero) => set({ questaoAtual: numero }),
 
-      atualizarCodigo: (numero, codigo) =>
-        set((s) => ({ respostas: { ...s.respostas, [numero]: { ...s.respostas[numero], codigo } } })),
+  atualizarCodigo: (numero, codigo) =>
+    set((s) => ({ respostas: { ...s.respostas, [numero]: { ...s.respostas[numero], codigo } } })),
 
-      marcarExecutando: (numero) =>
-        set((s) => ({
-          respostas: { ...s.respostas, [numero]: { ...s.respostas[numero], status: 'executando' } },
-        })),
+  marcarExecutando: (numero) =>
+    set((s) => ({
+      respostas: { ...s.respostas, [numero]: { ...s.respostas[numero], status: 'executando' } },
+    })),
 
-      registrarResultado: (numero, resultado) =>
-        set((s) => ({
-          respostas: {
-            ...s.respostas,
-            [numero]: {
-              ...s.respostas[numero],
-              status: resultado.status,
-              log: resultado.log,
-              erro: resultado.erro,
-            },
-          },
-        })),
+  registrarResultado: (numero, resultado) =>
+    set((s) => ({
+      respostas: {
+        ...s.respostas,
+        [numero]: {
+          ...s.respostas[numero],
+          status: resultado.status,
+          log: resultado.log,
+          erro: resultado.erro,
+        },
+      },
+    })),
 
-      finalizarAvaliacao: () => set({ fase: 'finalizado' }),
+  finalizarAvaliacao: () => set({ fase: 'finalizado' }),
 
-      setEnvioStatus: (envioStatus, envioMotivo) => set({ envioStatus, envioMotivo }),
-    }),
-    { name: 'simulador-avaliacao-v1' }
-  )
-);
+  setEnvioStatus: (envioStatus, envioMotivo) => set({ envioStatus, envioMotivo }),
+}));

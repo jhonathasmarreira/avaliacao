@@ -48,6 +48,11 @@ export function SimuladorPage() {
           </span>
         </div>
 
+        <p data-testid="aviso-sem-salvamento" className="simulador-aviso">
+          ⚠ Não recarregue (F5) nem feche a aba — não há salvamento automático e você perderá o
+          progresso.
+        </p>
+
         <ul data-testid="lista-questoes" className="lista-questoes">
           {QUESTOES.map((q) => {
             const status = respostas[q.numero]?.status ?? 'pendente';

@@ -43,6 +43,11 @@ export function IdentificacaoAvaliacaoPage() {
           </p>
         </div>
 
+        <p data-testid="aviso-sem-salvamento" className="id-aviso">
+          ⚠ Não há salvamento automático: recarregar a página (F5) ou fechar a aba durante a
+          avaliação reinicia tudo do zero e apaga as respostas já digitadas.
+        </p>
+
         <form onSubmit={handleSubmit} noValidate>
           <div className="field">
             <label htmlFor="nomeCompleto">Nome completo</label>

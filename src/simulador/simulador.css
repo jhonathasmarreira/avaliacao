@@ -63,6 +63,18 @@
   color: var(--muted);
 }
 
+.simulador-aviso,
+.id-aviso {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #d98a1c;
+  background: rgba(217, 138, 28, 0.12);
+  border: 1px solid rgba(217, 138, 28, 0.35);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin: 0 0 16px;
+}
+
 .lista-questoes {
   list-style: none;
   margin: 0;
