@@ -29,6 +29,15 @@ automaticamente, direto do navegador.
 Veja `COMO_CONFIGURAR_GITHUB_ACTION.txt` para publicar isso no GitHub Pages
 e configurar o envio de e-mail.
 
+## Rotas
+
+O simulador **não** fica na raiz do site. A raiz (`/`) serve uma página 404
+neutra, que não deve ser enviada a ninguém. O link do simulador — o que deve
+ser enviado ao candidato — é `/cypress-test`:
+
+- Dev: `http://localhost:5173/cypress-test/`
+- Produção: `https://SEU_USUARIO.github.io/avaliacao/cypress-test`
+
 ## Comandos
 
 ```

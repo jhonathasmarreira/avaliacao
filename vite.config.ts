@@ -11,6 +11,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(raiz, 'index.html'),
+        cypressTest: resolve(raiz, 'cypress-test/index.html'),
         sandbox: resolve(raiz, 'sandbox.html'),
       },
     },

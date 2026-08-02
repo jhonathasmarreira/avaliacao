@@ -6,6 +6,7 @@ export interface Candidato {
 export interface Questao {
   numero: number;
   titulo: string;
+  contexto: string;
   dado: string;
   quando?: string;
   entao: string;

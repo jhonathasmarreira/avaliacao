@@ -32,8 +32,12 @@ Isso é obrigatório e só precisa ser feito uma vez — o workflow
 deploy.yml não consegue habilitar isso sozinho.
 
 Depois disso, todo push na branch "main" (ou disparo manual pela aba
-Actions) builda e publica o site automaticamente. A URL fica em:
-  Settings > Pages (ou https://SEU_USUARIO.github.io/avaliacao/)
+Actions) builda e publica o site automaticamente.
+
+IMPORTANTE: a raiz do site (https://SEU_USUARIO.github.io/avaliacao/)
+não deve ser enviada ao candidato — ela só mostra uma página 404
+genérica, de propósito. O link do simulador de avaliação é:
+  https://SEU_USUARIO.github.io/avaliacao/cypress-test
 
 
 PASSO 2 — CRIAR UMA CONTA NO EMAILJS

@@ -6,6 +6,7 @@ export function QuestaoDescricao({ questao }: { questao: Questao }) {
       <h2>
         Questão {String(questao.numero).padStart(2, '0')} — {questao.titulo}
       </h2>
+      <p className="questao-contexto">{questao.contexto}</p>
       <ul className="bdd-lista">
         <li>
           <strong>Dado</strong> {questao.dado}
