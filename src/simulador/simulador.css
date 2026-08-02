@@ -1,0 +1,261 @@
+/* ── Simulador ──────────────────────────────────── */
+.relatorio-card {
+  max-width: 640px;
+}
+
+.relatorio-placar {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 8px 0 16px;
+}
+
+.envio-status {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.envio-ok {
+  color: var(--success);
+}
+
+.envio-falha {
+  color: var(--danger);
+}
+
+.relatorio-detalhe {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.simulador-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.simulador-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+}
+
+.simulador-sidebar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.simulador-sidebar-header span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.lista-questoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.questao-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.questao-item:hover {
+  background: var(--surface2);
+}
+
+.questao-ativa {
+  background: var(--surface2);
+  font-weight: 700;
+}
+
+.questao-numero {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.questao-titulo {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.questao-aprovada .questao-status-icone {
+  color: var(--success);
+}
+
+.questao-reprovada .questao-status-icone {
+  color: var(--danger);
+}
+
+.simulador-main {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+}
+
+.questao-descricao h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.bdd-lista {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bdd-lista strong {
+  color: var(--accent);
+  margin-right: 6px;
+}
+
+.questao-dica {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.simulador-painel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.simulador-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.code-editor-wrapper {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.simulador-editor-acoes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.questao-badge {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--surface2);
+  color: var(--muted);
+}
+
+.questao-badge-aprovada {
+  background: rgba(31, 169, 113, 0.15);
+  color: var(--success);
+}
+
+.questao-badge-reprovada {
+  background: rgba(229, 51, 92, 0.15);
+  color: var(--danger);
+}
+
+.log-panel {
+  background: #14172a;
+  color: #e7e9f5;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  min-height: 120px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.log-vazio {
+  color: #7a8099;
+}
+
+.log-linha {
+  margin: 0 0 4px;
+  white-space: pre-wrap;
+}
+
+.log-erro {
+  color: #ff8fa3;
+}
+
+.log-sucesso {
+  color: #74e0ac;
+}
+
+.log-info {
+  color: #8ea1ff;
+}
+
+.simulador-sandbox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.simulador-sandbox-titulo {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sandbox-frame {
+  width: 100%;
+  height: 440px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+}
+
+@media (max-width: 900px) {
+  .simulador-shell {
+    flex-direction: column;
+  }
+  .simulador-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .simulador-painel {
+    grid-template-columns: 1fr;
+  }
+}

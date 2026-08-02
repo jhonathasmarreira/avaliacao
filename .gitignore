@@ -3,13 +3,9 @@ dist
 dist-ssr
 *.local
 
-# Cypress
-cypress/videos
-cypress/screenshots
-cypress/downloads
-cypress/relatorio
-email-subject.txt
-email-body.txt
+# EmailJS local
+.env
+.env.local
 
 # editors / os
 .vscode/*

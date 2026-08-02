@@ -6,24 +6,21 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview --port 4173",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "test:e2e": "cross-env CYPRESS_BASE_URL=http://localhost:4173 start-server-and-test preview 4173 cy:run"
+    "preview": "vite preview --port 4173"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@emailjs/browser": "^4.4.1",
+    "@uiw/react-codemirror": "^4.23.7",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@types/node": "^26.1.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "cross-env": "^7.0.3",
-    "cypress": "^13.6.6",
-    "cypress-mochawesome-reporter": "^3.8.2",
-    "start-server-and-test": "^2.0.8",
     "typescript": "~5.7.2",
     "vite": "^8.0.4"
   }
