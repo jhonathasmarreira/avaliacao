@@ -3,10 +3,11 @@
   max-width: 640px;
 }
 
-.relatorio-placar {
+.relatorio-agradecimento {
   text-align: center;
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
   margin: 8px 0 16px;
 }
 
@@ -23,17 +24,6 @@
 
 .envio-falha {
   color: var(--danger);
-}
-
-.relatorio-detalhe {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px;
-  font-size: 12px;
-  white-space: pre-wrap;
-  max-height: 320px;
-  overflow-y: auto;
 }
 
 .simulador-shell {
@@ -119,12 +109,8 @@
   white-space: nowrap;
 }
 
-.questao-aprovada .questao-status-icone {
-  color: var(--success);
-}
-
-.questao-reprovada .questao-status-icone {
-  color: var(--danger);
+.questao-executada .questao-status-icone {
+  color: var(--accent);
 }
 
 .simulador-main {
@@ -198,16 +184,6 @@
   border-radius: 999px;
   background: var(--surface2);
   color: var(--muted);
-}
-
-.questao-badge-aprovada {
-  background: rgba(31, 169, 113, 0.15);
-  color: var(--success);
-}
-
-.questao-badge-reprovada {
-  background: rgba(229, 51, 92, 0.15);
-  color: var(--danger);
 }
 
 .log-panel {

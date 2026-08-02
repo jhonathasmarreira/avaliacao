@@ -1,4 +1,4 @@
-import type { LinhaLog, StatusQuestao } from '../types';
+import type { LinhaLog } from '../types';
 
 const ICONE: Record<LinhaLog['tipo'], string> = {
   erro: '✖',
@@ -7,9 +7,9 @@ const ICONE: Record<LinhaLog['tipo'], string> = {
   comando: '›',
 };
 
-export function ResultadoLogPanel({ log, status }: { log: LinhaLog[]; status: StatusQuestao }) {
+export function ResultadoLogPanel({ log }: { log: LinhaLog[] }) {
   return (
-    <div data-testid="log-execucao" className={`log-panel log-panel-${status}`}>
+    <div data-testid="log-execucao" className="log-panel">
       {log.length === 0 && <p className="log-vazio">Execute o teste para ver o resultado aqui.</p>}
       {log.map((linha, i) => (
         <p key={i} className={`log-linha log-${linha.tipo}`}>

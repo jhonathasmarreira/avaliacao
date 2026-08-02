@@ -23,7 +23,13 @@ export function SimuladorPage() {
 
   const questao = QUESTOES.find((q) => q.numero === questaoAtual) ?? QUESTOES[0];
   const resposta = respostas[questao.numero];
-  const aprovadas = QUESTOES.filter((q) => respostas[q.numero]?.status === 'aprovada').length;
+  // Só a contagem de quantas questões já foram executadas, não quantas passaram:
+  // durante a prova o candidato não deve ver se acertou ou errou.
+  const respondidas = QUESTOES.filter(
+    (q) => respostas[q.numero]?.status === 'aprovada' || respostas[q.numero]?.status === 'reprovada'
+  ).length;
+  const jaExecutou = resposta.status === 'aprovada' || resposta.status === 'reprovada';
+  const proximaQuestao = QUESTOES.find((q) => q.numero === questao.numero + 1);
 
   const handleReady = useCallback((controller: SandboxController) => {
     sandboxRef.current = controller;
@@ -44,7 +50,7 @@ export function SimuladorPage() {
         <div className="simulador-sidebar-header">
           <strong data-testid="simulador-candidato-nome">{candidato?.nomeCompleto}</strong>
           <span data-testid="simulador-placar">
-            {aprovadas}/{QUESTOES.length} aprovadas
+            {respondidas}/{QUESTOES.length} questões respondidas
           </span>
         </div>
 
@@ -56,17 +62,20 @@ export function SimuladorPage() {
         <ul data-testid="lista-questoes" className="lista-questoes">
           {QUESTOES.map((q) => {
             const status = respostas[q.numero]?.status ?? 'pendente';
+            // Exibição não diferencia aprovada/reprovada: só se já foi executada ou não.
+            const executada = status === 'aprovada' || status === 'reprovada';
+            const classeStatus = executada ? 'executada' : status;
             return (
               <li key={q.numero}>
                 <button
                   data-testid={`questao-item-${q.numero}`}
-                  className={`questao-item questao-${status} ${q.numero === questaoAtual ? 'questao-ativa' : ''}`}
+                  className={`questao-item questao-${classeStatus} ${q.numero === questaoAtual ? 'questao-ativa' : ''}`}
                   onClick={() => irPara(q.numero)}
                 >
                   <span className="questao-numero">{String(q.numero).padStart(2, '0')}</span>
                   <span className="questao-titulo">{q.titulo}</span>
                   <span className="questao-status-icone">
-                    {status === 'aprovada' ? '✔' : status === 'reprovada' ? '✖' : status === 'executando' ? '…' : ''}
+                    {status === 'executando' ? '…' : executada ? '●' : ''}
                   </span>
                 </button>
               </li>
@@ -93,11 +102,24 @@ export function SimuladorPage() {
               <button data-testid="btn-executar" className="btn-primary" onClick={executar} disabled={rodando}>
                 {rodando ? 'Executando…' : 'Executar teste (Ctrl+Enter)'}
               </button>
-              <span data-testid="questao-status" className={`questao-badge questao-badge-${resposta.status}`}>
-                {resposta.status}
+              {jaExecutou && proximaQuestao && (
+                <button
+                  data-testid="btn-proxima-questao"
+                  className="btn-secondary"
+                  onClick={() => irPara(proximaQuestao.numero)}
+                >
+                  Próxima questão →
+                </button>
+              )}
+              <span data-testid="questao-status" className="questao-badge">
+                {resposta.status === 'executando'
+                  ? 'executando'
+                  : jaExecutou
+                    ? 'executado'
+                    : 'pendente'}
               </span>
             </div>
-            <ResultadoLogPanel log={resposta.log} status={resposta.status} />
+            <ResultadoLogPanel log={resposta.log} />
           </div>
 
           <div className="simulador-sandbox">

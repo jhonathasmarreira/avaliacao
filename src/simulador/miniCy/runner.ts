@@ -60,7 +60,9 @@ export async function executarQuestao(sandbox: SandboxController, codigo: string
     }
   }
 
-  onLog({ tipo: 'sucesso', texto: 'Questão aprovada.' });
+  // Não loga o veredito (aprovada/reprovada) aqui de propósito: o candidato não deve
+  // ver se passou ou não durante a prova, só que a execução terminou.
+  onLog({ tipo: 'info', texto: 'Execução concluída.' });
   return { status: 'aprovada', log };
 }
 
