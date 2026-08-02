@@ -71,7 +71,7 @@ export function TransactionModal({ onClose, editing }: Props) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
+        <form onSubmit={handleSubmit} className="modal-form" noValidate>
           <div className="type-toggle">
             <button
               type="button"
