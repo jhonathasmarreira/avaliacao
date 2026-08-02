@@ -1,0 +1,23 @@
+node_modules
+dist
+dist-ssr
+*.local
+
+# Cypress
+cypress/videos
+cypress/screenshots
+cypress/downloads
+cypress/relatorio
+email-subject.txt
+email-body.txt
+
+# editors / os
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

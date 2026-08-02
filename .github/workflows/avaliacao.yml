@@ -1,0 +1,58 @@
+name: Avaliação Cypress
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch: {}
+
+jobs:
+  testar-e-enviar-resultado:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build da aplicação
+        run: npm run build
+
+      # continue-on-error garante que, mesmo com questões reprovadas ou com
+      # erro, o job segue até o passo de e-mail — a avaliação deve ser
+      # enviada sempre, com o resultado que for.
+      - name: Rodar os 20 testes Cypress
+        run: npm run test:e2e
+        continue-on-error: true
+
+      - name: Gerar assunto/corpo do e-mail a partir do resumo
+        if: always()
+        id: resumo
+        run: node scripts/gerar-corpo-email.cjs
+
+      - name: Enviar e-mail com o resultado da avaliação
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: ${{ steps.resumo.outputs.subject }}
+          to: francisco.marreira@engesoftware.com.br
+          from: ${{ secrets.SMTP_USERNAME }}
+          body: file://email-body.txt
+
+      - name: Publicar relatório Cypress como artefato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-cypress
+          path: cypress/relatorio
+          if-no-files-found: ignore
