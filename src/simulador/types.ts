@@ -12,6 +12,7 @@ export interface Questao {
   entao: string;
   e?: string;
   dica?: string;
+  comandos?: string[];
   codigoInicial: string;
 }
 

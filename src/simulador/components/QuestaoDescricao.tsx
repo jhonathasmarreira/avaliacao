@@ -30,6 +30,11 @@ export function QuestaoDescricao({ questao }: { questao: Questao }) {
           Dica: <code>{questao.dica}</code>
         </p>
       )}
+      {questao.comandos && questao.comandos.length > 0 && (
+        <p className="questao-comandos">
+          Comandos sugeridos: <code>{questao.comandos.join(', ')}</code>
+        </p>
+      )}
     </div>
   );
 }
