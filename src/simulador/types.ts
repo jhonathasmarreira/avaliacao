@@ -13,6 +13,7 @@ export interface Questao {
   e?: string;
   dica?: string;
   comandos?: string[];
+  passos?: string[];
   codigoInicial: string;
 }
 
