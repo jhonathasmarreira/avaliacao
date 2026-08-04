@@ -1,5 +1,7 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import { autocompletion } from '@codemirror/autocomplete';
+import { cyCompletionSource } from '../miniCy/autocomplete';
 
 interface Props {
   value: string;
@@ -23,9 +25,9 @@ export function CodeEditor({ value, onChange, onExecutar }: Props) {
         value={value}
         height="260px"
         theme="dark"
-        extensions={[javascript()]}
+        extensions={[javascript(), autocompletion({ override: [cyCompletionSource] })]}
         onChange={onChange}
-        basicSetup={{ lineNumbers: true, foldGutter: false }}
+        basicSetup={{ lineNumbers: true, foldGutter: false, autocompletion: false }}
       />
     </div>
   );
