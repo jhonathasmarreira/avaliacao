@@ -29,6 +29,10 @@ export const QUESTOES: Questao[] = [
     dado: 'que acesso a aplicação',
     entao: 'devo ver a tela de identificação',
     dica: 'driver já vem pronto no construtor — não instancie nada, só use this.driver.',
+    localizadores:
+      'this.telaIdentificacao → [data-testid="identificacao-page"]\n' +
+      'this.campoNome → [data-testid="input-nome"]\n' +
+      'this.campoEmail → [data-testid="input-email"]',
     comandos: ['driver.get', 'driver.findElement', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
       'Em Page.acessarPagina(), chame this.driver.get(\'/\').',
@@ -45,9 +49,7 @@ export const QUESTOES: Questao[] = [
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    this.telaIdentificacao = By.cssSelector('[data-testid="identificacao-page"]');
-    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
-    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -101,6 +103,11 @@ class Steps {
     dado: 'que acesso a aplicação',
     entao: 'devo ver a mensagem de erro do e-mail',
     dica: 'Os métodos @Quando/@E que recebem valor da feature (ex: {string}) chegam como parâmetro do método — não precisa reler a feature.',
+    localizadores:
+      'this.campoNome → [data-testid="input-nome"]\n' +
+      'this.campoEmail → [data-testid="input-email"]\n' +
+      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
+      'this.erroEmail → [data-testid="erro-email"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
       'Em Page.preencherNome(nome) e preencherEmail(email), use this.driver.findElement(<localizador>).sendKeys(<valor>) — não precisa de await, é encadeado igual clique.',
@@ -118,10 +125,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
-    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
-    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
-    this.erroEmail = By.cssSelector('[data-testid="erro-email"]');
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -183,6 +187,11 @@ class Steps {
     dado: 'que acesso a aplicação',
     entao: 'devo ver o card de saldo',
     dica: '[data-testid="card-saldo"] só existe depois da identificação.',
+    localizadores:
+      'this.campoNome → [data-testid="input-nome"]\n' +
+      'this.campoEmail → [data-testid="input-email"]\n' +
+      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
+      'this.cardSaldo → [data-testid="card-saldo"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
       'Mesma implementação da questão anterior pra preencherNome/preencherEmail/clicarIniciar/acessarPagina.',
@@ -198,10 +207,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
-    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
-    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
-    this.cardSaldo = By.cssSelector('[data-testid="card-saldo"]');
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -263,6 +269,19 @@ class Steps {
     dado: 'que acesso a aplicação',
     entao: 'devo ver o lançamento "Salario" na lista',
     dica: '[data-testid="input-data"] já vem com uma data padrão — dê .clear() antes de preencher com sendKeys(), senão o valor novo fica colado no antigo.',
+    localizadores:
+      'this.campoNome → [data-testid="input-nome"]\n' +
+      'this.campoEmail → [data-testid="input-email"]\n' +
+      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
+      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
+      'this.tipoReceita → [data-testid="tipo-receita"]\n' +
+      'this.campoDescricao → [data-testid="input-descricao"]\n' +
+      'this.campoValor → [data-testid="input-valor"]\n' +
+      'this.campoCategoria → [data-testid="select-categoria"]\n' +
+      'this.campoData → [data-testid="input-data"]\n' +
+      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
+      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
+      'this.linhaLancamento → [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.clear()', '.click()', '.getText()', 'Assert.assertTrue'],
     passos: [
       'Page.preencherData(data) precisa limpar o campo antes de digitar: this.driver.findElement(this.campoData).clear() e depois .sendKeys(data).',
@@ -287,18 +306,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
-    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
-    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
-    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
-    this.tipoReceita = By.cssSelector('[data-testid="tipo-receita"]');
-    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
-    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
-    this.campoCategoria = By.cssSelector('[data-testid="select-categoria"]');
-    this.campoData = By.cssSelector('[data-testid="input-data"]');
-    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
-    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
-    this.linhaLancamento = By.cssSelector('[data-testid="linha-lancamento"]');
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -433,6 +441,18 @@ class Steps {
     dado: 'que acesso a aplicação',
     entao: 'devo ver o lançamento "Mercado do mes" na lista',
     dica: '[data-testid="btn-editar"] abre o mesmo modal do cadastro, já preenchido — só troque a descrição.',
+    localizadores:
+      'this.campoNome → [data-testid="input-nome"]\n' +
+      'this.campoEmail → [data-testid="input-email"]\n' +
+      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
+      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
+      'this.campoDescricao → [data-testid="input-descricao"]\n' +
+      'this.campoValor → [data-testid="input-valor"]\n' +
+      'this.campoData → [data-testid="input-data"]\n' +
+      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
+      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
+      'this.botaoEditar → [data-testid="btn-editar"]\n' +
+      'this.linhaLancamento → [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.clear()', '.click()', '.getText()', 'Assert.assertTrue'],
     passos: [
       'Reaproveite a mesma lógica de preencherData (clear + sendKeys) e listaContemLancamento das questões anteriores.',
@@ -459,17 +479,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
-    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
-    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
-    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
-    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
-    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
-    this.campoData = By.cssSelector('[data-testid="input-data"]');
-    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
-    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
-    this.botaoEditar = By.cssSelector('[data-testid="btn-editar"]');
-    this.linhaLancamento = By.cssSelector('[data-testid="linha-lancamento"]');
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -603,6 +613,19 @@ class Steps {
     dado: 'que acesso a aplicação',
     entao: 'devo ver a lista vazia',
     dica: '[data-testid="btn-excluir"] abre um modal de confirmação — o clique que realmente exclui é em outro botão, o de confirmar.',
+    localizadores:
+      'this.campoNome → [data-testid="input-nome"]\n' +
+      'this.campoEmail → [data-testid="input-email"]\n' +
+      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
+      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
+      'this.campoDescricao → [data-testid="input-descricao"]\n' +
+      'this.campoValor → [data-testid="input-valor"]\n' +
+      'this.campoData → [data-testid="input-data"]\n' +
+      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
+      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
+      'this.botaoExcluir → [data-testid="btn-excluir"]\n' +
+      'this.botaoConfirmarExclusao → [data-testid="btn-confirmar-exclusao"]\n' +
+      'this.listaVazia → [data-testid="lista-vazia"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
       'Page.clicarExcluir() clica no botão de excluir do lançamento.',
@@ -627,18 +650,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
-    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
-    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
-    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
-    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
-    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
-    this.campoData = By.cssSelector('[data-testid="input-data"]');
-    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
-    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
-    this.botaoExcluir = By.cssSelector('[data-testid="btn-excluir"]');
-    this.botaoConfirmarExclusao = By.cssSelector('[data-testid="btn-confirmar-exclusao"]');
-    this.listaVazia = By.cssSelector('[data-testid="lista-vazia"]');
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -772,6 +784,20 @@ class Steps {
     dado: 'que acesso a aplicação',
     entao: 'devo ver o lançamento "Salario" na lista',
     dica: 'O <select> de filtro usa valores internos em inglês: "income" pra Receita e "expense" pra Despesa — não é o texto visível.',
+    localizadores:
+      'this.campoNome → [data-testid="input-nome"]\n' +
+      'this.campoEmail → [data-testid="input-email"]\n' +
+      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
+      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
+      'this.tipoReceita → [data-testid="tipo-receita"]\n' +
+      'this.tipoDespesa → [data-testid="tipo-despesa"]\n' +
+      'this.campoDescricao → [data-testid="input-descricao"]\n' +
+      'this.campoValor → [data-testid="input-valor"]\n' +
+      'this.campoData → [data-testid="input-data"]\n' +
+      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
+      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
+      'this.filtroTipo → [data-testid="filtro-tipo"]\n' +
+      'this.linhaLancamento → [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.selectByValue()', '.getText()', 'Assert.assertTrue/assertFalse'],
     passos: [
       'Page.filtrarPorTipo(tipo) recebe "Receita" (texto da feature) e precisa traduzir pra "income" antes de chamar this.driver.findElement(this.filtroTipo).selectByValue("income").',
@@ -802,19 +828,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
-    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
-    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
-    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
-    this.tipoReceita = By.cssSelector('[data-testid="tipo-receita"]');
-    this.tipoDespesa = By.cssSelector('[data-testid="tipo-despesa"]');
-    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
-    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
-    this.campoData = By.cssSelector('[data-testid="input-data"]');
-    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
-    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
-    this.filtroTipo = By.cssSelector('[data-testid="filtro-tipo"]');
-    this.linhaLancamento = By.cssSelector('[data-testid="linha-lancamento"]');
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -962,6 +976,17 @@ class Steps {
     dado: 'que acesso a aplicação',
     entao: 'devo ver o lançamento "Aluguel" na lista',
     dica: 'driver.navigate().refresh() recarrega sem apagar o localStorage — diferente de driver.get(\'/\'), que reinicia o estado.',
+    localizadores:
+      'this.campoNome → [data-testid="input-nome"]\n' +
+      'this.campoEmail → [data-testid="input-email"]\n' +
+      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
+      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
+      'this.campoDescricao → [data-testid="input-descricao"]\n' +
+      'this.campoValor → [data-testid="input-valor"]\n' +
+      'this.campoData → [data-testid="input-data"]\n' +
+      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
+      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
+      'this.linhaLancamento → [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', 'driver.navigate().refresh()', '.getText()', 'Assert.assertTrue'],
     passos: [
       'Page.recarregarPagina() chama this.driver.navigate().refresh().',
@@ -986,16 +1011,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
-    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
-    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
-    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
-    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
-    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
-    this.campoData = By.cssSelector('[data-testid="input-data"]');
-    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
-    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
-    this.linhaLancamento = By.cssSelector('[data-testid="linha-lancamento"]');
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {

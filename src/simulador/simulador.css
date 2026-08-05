@@ -164,6 +164,37 @@
   color: var(--muted);
 }
 
+.questao-localizadores-bloco {
+  margin: 0 0 12px;
+}
+
+.questao-localizadores-titulo {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.questao-localizadores {
+  background: #14172a;
+  color: #e7e9f5;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin: 4px 0 0;
+}
+
+.questao-aviso-this {
+  font-size: 12px;
+  color: #b98900;
+  background: rgba(185, 137, 0, 0.12);
+  border: 1px solid rgba(185, 137, 0, 0.35);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin: 0 0 10px;
+}
+
 .btn-passos {
   margin: 0 0 12px;
   font-size: 12px;

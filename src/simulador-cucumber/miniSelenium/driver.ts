@@ -11,6 +11,9 @@ export interface Locator {
 
 export const By = {
   cssSelector: (seletor: string): Locator => ({ seletor }),
+  id: (id: string): Locator => ({ seletor: `#${id}` }),
+  name: (nome: string): Locator => ({ seletor: `[name="${nome}"]` }),
+  className: (nome: string): Locator => ({ seletor: `.${nome}` }),
 };
 
 export interface Driver {

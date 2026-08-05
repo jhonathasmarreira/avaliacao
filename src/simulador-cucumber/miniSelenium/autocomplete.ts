@@ -11,7 +11,12 @@ const MEMBROS_RAIZ: Record<string, { label: string; detail: string }[]> = {
     { label: 'findElement', detail: 'driver.findElement(locator)' },
     { label: 'navigate', detail: 'driver.navigate().refresh()' },
   ],
-  By: [{ label: 'cssSelector', detail: 'By.cssSelector(seletor)' }],
+  By: [
+    { label: 'cssSelector', detail: 'By.cssSelector(seletor)' },
+    { label: 'id', detail: 'By.id(id)' },
+    { label: 'name', detail: 'By.name(nome)' },
+    { label: 'className', detail: 'By.className(nome)' },
+  ],
   Assert: [
     { label: 'assertEquals', detail: 'Assert.assertEquals(esperado, atual)' },
     { label: 'assertTrue', detail: 'Assert.assertTrue(condicao)' },

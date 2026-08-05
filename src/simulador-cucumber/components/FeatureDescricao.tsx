@@ -19,6 +19,23 @@ export function FeatureDescricao({ questao }: { questao: Questao }) {
         {(questao.featureLinhas ?? []).join('\n')}
       </pre>
 
+      <p className="questao-aviso-this">
+        ⚠ Diferente de Java: em JavaScript, campos e métodos da própria classe
+        sempre precisam do prefixo <code>this.</code> — use{' '}
+        <code>this.page.metodo()</code>, nunca só <code>page.metodo()</code>.
+      </p>
+
+      {questao.localizadores && (
+        <div className="questao-localizadores-bloco">
+          <span className="questao-localizadores-titulo">
+            Localizadores sugeridos (monte com By.cssSelector no construtor da Page):
+          </span>
+          <pre data-testid="questao-localizadores" className="questao-localizadores">
+            {questao.localizadores}
+          </pre>
+        </div>
+      )}
+
       {questao.passos && questao.passos.length > 0 && (
         <button
           data-testid="btn-ver-passos"

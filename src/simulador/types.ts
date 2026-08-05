@@ -19,6 +19,11 @@ export interface Questao {
    *  exibido ao candidato e usado pelo motor pra casar com os métodos
    *  anotados da classe Steps. */
   featureLinhas?: string[];
+  /** Usado só pelo simulador Cucumber (Java/Page Object): lista "campo →
+   *  seletor" com os data-testid que o candidato precisa localizar — os
+   *  campos ficam de fora do codigoInicial de propósito, o candidato quem
+   *  escreve `this.campo = By.cssSelector(...)` no construtor da Page. */
+  localizadores?: string;
   codigoInicial: string;
 }
 
