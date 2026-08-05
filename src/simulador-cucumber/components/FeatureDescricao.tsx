@@ -26,14 +26,9 @@ export function FeatureDescricao({ questao }: { questao: Questao }) {
       </p>
 
       {questao.localizadores && (
-        <div className="questao-localizadores-bloco">
-          <span className="questao-localizadores-titulo">
-            Localizadores sugeridos (monte com By.cssSelector no construtor da Page):
-          </span>
-          <pre data-testid="questao-localizadores" className="questao-localizadores">
-            {questao.localizadores}
-          </pre>
-        </div>
+        <p data-testid="questao-localizadores" className="questao-localizadores">
+          Localizadores: <code>{questao.localizadores}</code>
+        </p>
       )}
 
       {questao.passos && questao.passos.length > 0 && (

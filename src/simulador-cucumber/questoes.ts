@@ -29,16 +29,12 @@ export const QUESTOES: Questao[] = [
     dado: 'que acesso a aplicação',
     entao: 'devo ver a tela de identificação',
     dica: 'driver já vem pronto no construtor — não instancie nada, só use this.driver.',
-    localizadores:
-      'this.telaIdentificacao → [data-testid="identificacao-page"]\n' +
-      'this.campoNome → [data-testid="input-nome"]\n' +
-      'this.campoEmail → [data-testid="input-email"]',
+    localizadores: '[data-testid="identificacao-page"] / [data-testid="input-nome"] / [data-testid="input-email"]',
     comandos: ['driver.get', 'driver.findElement', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
-      'Em Page.acessarPagina(), chame this.driver.get(\'/\').',
-      'Em Page.telaIdentificacaoEstaVisivel() (e nos outros dois getters), retorne this.driver.findElement(<localizador>).isDisplayed() — não precisa de await aqui, só devolva a Promise.',
-      'Em Steps, cada método @Dado/@Quando/@Então só chama o método correspondente da Page.',
-      'Nos métodos @Então/@E que fazem asserção, use await pra pegar o valor real antes de passar pro Assert.',
+      'Acesse a aplicação.',
+      'Confirme que a tela de identificação fica visível.',
+      'Confirme que os campos de nome completo e e-mail aparecem na tela.',
     ],
     featureLinhas: [
       'Dado que acesso a aplicação',
@@ -104,16 +100,14 @@ class Steps {
     entao: 'devo ver a mensagem de erro do e-mail',
     dica: 'Os métodos @Quando/@E que recebem valor da feature (ex: {string}) chegam como parâmetro do método — não precisa reler a feature.',
     localizadores:
-      'this.campoNome → [data-testid="input-nome"]\n' +
-      'this.campoEmail → [data-testid="input-email"]\n' +
-      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
-      'this.erroEmail → [data-testid="erro-email"]',
+      '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="erro-email"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
-      'Em Page.preencherNome(nome) e preencherEmail(email), use this.driver.findElement(<localizador>).sendKeys(<valor>) — não precisa de await, é encadeado igual clique.',
-      'Em Page.clicarIniciar(), use this.driver.findElement(this.botaoIniciar).click().',
-      'Em Page.erroEmailEstaVisivel(), retorne this.driver.findElement(this.erroEmail).isDisplayed().',
-      'No Steps, os métodos @E preenchoONomeCom(nome) e preenchoOEmailCom(email) recebem o valor certo automaticamente (vem da feature) — só repasse pra Page.',
+      'Acesse a aplicação.',
+      'Preencha o campo nome com qualquer texto válido.',
+      'Preencha o campo e-mail com um valor sem "@".',
+      'Clique no botão de iniciar avaliação.',
+      'Confirme que a mensagem de erro de e-mail fica visível.',
     ],
     featureLinhas: [
       'Dado que acesso a aplicação',
@@ -188,14 +182,13 @@ class Steps {
     entao: 'devo ver o card de saldo',
     dica: '[data-testid="card-saldo"] só existe depois da identificação.',
     localizadores:
-      'this.campoNome → [data-testid="input-nome"]\n' +
-      'this.campoEmail → [data-testid="input-email"]\n' +
-      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
-      'this.cardSaldo → [data-testid="card-saldo"]',
+      '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="card-saldo"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
-      'Mesma implementação da questão anterior pra preencherNome/preencherEmail/clicarIniciar/acessarPagina.',
-      'Em Page.cardSaldoEstaVisivel(), retorne this.driver.findElement(this.cardSaldo).isDisplayed().',
+      'Acesse a aplicação.',
+      'Preencha nome e e-mail válidos.',
+      'Clique no botão de iniciar avaliação.',
+      'Confirme que o card de saldo (já no Dashboard) fica visível.',
     ],
     featureLinhas: [
       'Dado que acesso a aplicação',
@@ -270,23 +263,13 @@ class Steps {
     entao: 'devo ver o lançamento "Salario" na lista',
     dica: '[data-testid="input-data"] já vem com uma data padrão — dê .clear() antes de preencher com sendKeys(), senão o valor novo fica colado no antigo.',
     localizadores:
-      'this.campoNome → [data-testid="input-nome"]\n' +
-      'this.campoEmail → [data-testid="input-email"]\n' +
-      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
-      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
-      'this.tipoReceita → [data-testid="tipo-receita"]\n' +
-      'this.campoDescricao → [data-testid="input-descricao"]\n' +
-      'this.campoValor → [data-testid="input-valor"]\n' +
-      'this.campoCategoria → [data-testid="select-categoria"]\n' +
-      'this.campoData → [data-testid="input-data"]\n' +
-      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
-      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
-      'this.linhaLancamento → [data-testid="linha-lancamento"]',
+      '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="tipo-receita"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="select-categoria"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.clear()', '.click()', '.getText()', 'Assert.assertTrue'],
     passos: [
-      'Page.preencherData(data) precisa limpar o campo antes de digitar: this.driver.findElement(this.campoData).clear() e depois .sendKeys(data).',
-      'Page.listaContemLancamento(descricao) precisa ser assíncrono: leia o texto com await this.driver.findElement(this.linhaLancamento).getText() e devolva se esse texto inclui a descrição (String.includes).',
-      'Os demais métodos de ação (clicar/preencher/selecionar) seguem o mesmo padrão das questões anteriores.',
+      'Acesse a aplicação, identifique-se e abra uma nova transação.',
+      'Escolha o tipo receita e preencha descrição, valor, categoria e data.',
+      'Salve e vá para a lista de lançamentos.',
+      'Confirme que o lançamento cadastrado aparece na lista.',
     ],
     featureLinhas: [
       'Dado que acesso a aplicação',
@@ -442,22 +425,13 @@ class Steps {
     entao: 'devo ver o lançamento "Mercado do mes" na lista',
     dica: '[data-testid="btn-editar"] abre o mesmo modal do cadastro, já preenchido — só troque a descrição.',
     localizadores:
-      'this.campoNome → [data-testid="input-nome"]\n' +
-      'this.campoEmail → [data-testid="input-email"]\n' +
-      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
-      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
-      'this.campoDescricao → [data-testid="input-descricao"]\n' +
-      'this.campoValor → [data-testid="input-valor"]\n' +
-      'this.campoData → [data-testid="input-data"]\n' +
-      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
-      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
-      'this.botaoEditar → [data-testid="btn-editar"]\n' +
-      'this.linhaLancamento → [data-testid="linha-lancamento"]',
+      '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="btn-editar"] / [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.clear()', '.click()', '.getText()', 'Assert.assertTrue'],
     passos: [
-      'Reaproveite a mesma lógica de preencherData (clear + sendKeys) e listaContemLancamento das questões anteriores.',
-      'Page.limparDescricao() só precisa de this.driver.findElement(this.campoDescricao).clear().',
-      'Page.clicarEditar() clica no botão de editar do lançamento já cadastrado.',
+      'Acesse a aplicação, identifique-se e cadastre um lançamento.',
+      'Abra a edição do lançamento cadastrado.',
+      'Limpe a descrição e preencha com o novo valor.',
+      'Salve e confirme que a lista mostra a descrição atualizada.',
     ],
     featureLinhas: [
       'Dado que acesso a aplicação',
@@ -614,23 +588,12 @@ class Steps {
     entao: 'devo ver a lista vazia',
     dica: '[data-testid="btn-excluir"] abre um modal de confirmação — o clique que realmente exclui é em outro botão, o de confirmar.',
     localizadores:
-      'this.campoNome → [data-testid="input-nome"]\n' +
-      'this.campoEmail → [data-testid="input-email"]\n' +
-      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
-      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
-      'this.campoDescricao → [data-testid="input-descricao"]\n' +
-      'this.campoValor → [data-testid="input-valor"]\n' +
-      'this.campoData → [data-testid="input-data"]\n' +
-      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
-      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
-      'this.botaoExcluir → [data-testid="btn-excluir"]\n' +
-      'this.botaoConfirmarExclusao → [data-testid="btn-confirmar-exclusao"]\n' +
-      'this.listaVazia → [data-testid="lista-vazia"]',
+      '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="btn-excluir"] / [data-testid="btn-confirmar-exclusao"] / [data-testid="lista-vazia"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
-      'Page.clicarExcluir() clica no botão de excluir do lançamento.',
-      'Page.clicarConfirmarExclusao() clica no botão de confirmar dentro do modal.',
-      'Page.listaVaziaEstaVisivel() retorna this.driver.findElement(this.listaVazia).isDisplayed().',
+      'Acesse a aplicação, identifique-se e cadastre um lançamento.',
+      'Clique em excluir e depois confirme a exclusão.',
+      'Confirme que a lista fica vazia.',
     ],
     featureLinhas: [
       'Dado que acesso a aplicação',
@@ -785,23 +748,12 @@ class Steps {
     entao: 'devo ver o lançamento "Salario" na lista',
     dica: 'O <select> de filtro usa valores internos em inglês: "income" pra Receita e "expense" pra Despesa — não é o texto visível.',
     localizadores:
-      'this.campoNome → [data-testid="input-nome"]\n' +
-      'this.campoEmail → [data-testid="input-email"]\n' +
-      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
-      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
-      'this.tipoReceita → [data-testid="tipo-receita"]\n' +
-      'this.tipoDespesa → [data-testid="tipo-despesa"]\n' +
-      'this.campoDescricao → [data-testid="input-descricao"]\n' +
-      'this.campoValor → [data-testid="input-valor"]\n' +
-      'this.campoData → [data-testid="input-data"]\n' +
-      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
-      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
-      'this.filtroTipo → [data-testid="filtro-tipo"]\n' +
-      'this.linhaLancamento → [data-testid="linha-lancamento"]',
+      '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="tipo-receita"] / [data-testid="tipo-despesa"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="filtro-tipo"] / [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.selectByValue()', '.getText()', 'Assert.assertTrue/assertFalse'],
     passos: [
-      'Page.filtrarPorTipo(tipo) recebe "Receita" (texto da feature) e precisa traduzir pra "income" antes de chamar this.driver.findElement(this.filtroTipo).selectByValue("income").',
-      'Reaproveite Page.listaContemLancamento(descricao) da questão 4 pras duas asserções (uma com Assert.assertTrue, outra com Assert.assertFalse).',
+      'Acesse a aplicação, identifique-se e cadastre uma receita e uma despesa.',
+      'Filtre a lista pelo tipo Receita.',
+      'Confirme que só o lançamento de receita aparece na lista (e o de despesa não).',
     ],
     featureLinhas: [
       'Dado que acesso a aplicação',
@@ -977,20 +929,12 @@ class Steps {
     entao: 'devo ver o lançamento "Aluguel" na lista',
     dica: 'driver.navigate().refresh() recarrega sem apagar o localStorage — diferente de driver.get(\'/\'), que reinicia o estado.',
     localizadores:
-      'this.campoNome → [data-testid="input-nome"]\n' +
-      'this.campoEmail → [data-testid="input-email"]\n' +
-      'this.botaoIniciar → [data-testid="btn-iniciar"]\n' +
-      'this.botaoNovaTransacao → [data-testid="btn-nova-transacao"]\n' +
-      'this.campoDescricao → [data-testid="input-descricao"]\n' +
-      'this.campoValor → [data-testid="input-valor"]\n' +
-      'this.campoData → [data-testid="input-data"]\n' +
-      'this.botaoSalvar → [data-testid="btn-salvar"]\n' +
-      'this.menuLancamentos → [data-testid="nav-lancamentos"]\n' +
-      'this.linhaLancamento → [data-testid="linha-lancamento"]',
+      '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', 'driver.navigate().refresh()', '.getText()', 'Assert.assertTrue'],
     passos: [
-      'Page.recarregarPagina() chama this.driver.navigate().refresh().',
-      'O resto reaproveita a mesma lógica das questões de cadastro/lista anteriores.',
+      'Acesse a aplicação, identifique-se e cadastre um lançamento.',
+      'Recarregue a página.',
+      'Confirme que o lançamento continua na lista depois de recarregar.',
     ],
     featureLinhas: [
       'Dado que acesso a aplicação',
