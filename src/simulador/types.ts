@@ -14,6 +14,11 @@ export interface Questao {
   dica?: string;
   comandos?: string[];
   passos?: string[];
+  /** Usado só pelo simulador Cucumber (Java/Page Object): texto completo da
+   *  feature (cada linha já com "Dado "/"Quando "/"Então "/"E " na frente),
+   *  exibido ao candidato e usado pelo motor pra casar com os métodos
+   *  anotados da classe Steps. */
+  featureLinhas?: string[];
   codigoInicial: string;
 }
 

@@ -1,16 +1,12 @@
 import { useCallback, useRef, useState } from 'react';
 import { useSimuladorCucumberStore } from '../store/useSimuladorCucumberStore';
 import { QUESTOES } from '../questoes';
-import { criarExecutorGherkin } from '../../simulador/miniCy/gherkinRunner';
-import { CATALOGO_STEPS } from '../gherkinCatalogo';
+import { executarQuestaoJava } from '../miniSelenium/runner';
 import type { SandboxController } from '../../simulador/types';
 import { SandboxFrame } from '../../simulador/components/SandboxFrame';
-import { QuestaoDescricao } from '../../simulador/components/QuestaoDescricao';
 import { ResultadoLogPanel } from '../../simulador/components/ResultadoLogPanel';
-import { GherkinEditor } from '../components/GherkinEditor';
-import { GherkinAjuda } from '../components/GherkinAjuda';
-
-const executarQuestaoGherkin = criarExecutorGherkin(CATALOGO_STEPS);
+import { FeatureDescricao } from '../components/FeatureDescricao';
+import { JavaEditor } from '../components/JavaEditor';
 
 export function SimuladorPage() {
   const questaoAtual = useSimuladorCucumberStore((s) => s.questaoAtual);
@@ -43,7 +39,7 @@ export function SimuladorPage() {
     if (!sandboxRef.current || rodando) return;
     setRodando(true);
     marcarExecutando(questao.numero);
-    const resultado = await executarQuestaoGherkin(sandboxRef.current, resposta.codigo);
+    const resultado = await executarQuestaoJava(sandboxRef.current, questao.featureLinhas ?? [], resposta.codigo);
     registrarResultado(questao.numero, resultado);
     setRodando(false);
   }
@@ -93,12 +89,11 @@ export function SimuladorPage() {
       </aside>
 
       <main className="simulador-main">
-        <QuestaoDescricao questao={questao} />
+        <FeatureDescricao questao={questao} />
 
         <div className="simulador-painel">
           <div className="simulador-editor">
-            <GherkinAjuda />
-            <GherkinEditor
+            <JavaEditor
               value={resposta.codigo}
               onChange={(codigo) => atualizarCodigo(questao.numero, codigo)}
               onExecutar={executar}
@@ -130,9 +125,9 @@ export function SimuladorPage() {
           <div className="simulador-sandbox">
             <p className="simulador-sandbox-titulo">App sob teste</p>
             <p className="simulador-sandbox-legenda">
-              Aplicação financeira fictícia que seu cenário testa. Ela tem seu próprio login (nome/e-mail
-              de mentira) — diferente da sua identificação — que quase todo teste precisa passar antes de
-              chegar no Dashboard.
+              Aplicação financeira fictícia que seu Page Object testa. Ela tem seu próprio login
+              (nome/e-mail de mentira) — diferente da sua identificação — que quase todo teste
+              precisa passar antes de chegar no Dashboard.
             </p>
             <SandboxFrame onReady={handleReady} />
           </div>

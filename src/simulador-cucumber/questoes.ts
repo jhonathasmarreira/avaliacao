@@ -1,168 +1,1116 @@
 import type { Questao } from '../simulador/types';
 
-// As 8 questões do simulador Cucumber — mesmos cenários (mesma regra de
-// negócio) das 8 questões ativas do simulador Cypress em
-// ../simulador/questoes.ts, só que aqui o candidato escreve puro Gherkin
-// (Dado/Quando/Então/E em português) contra o catálogo fechado de steps de
-// ./gherkinCatalogo.ts, em vez de código. `dica` lista os nomes amigáveis do
-// dicionário de elementos necessários para essa questão; `comandos` lista os
-// tipos de step esperados (sem a sintaxe exata); `passos` é o passo a passo
-// detalhado, exibido só ao clicar em "Ver passo a passo".
+// As 8 questões do simulador Cucumber, no modelo Java/Selenium/Page Object:
+// a feature (Gherkin) já vem pronta e é só leitura (featureLinhas); o
+// candidato recebe duas classes pré-montadas — Page (localizadores +
+// construtor prontos) e Steps (@Dado/@Quando/@Então/@E já anotados, Page já
+// instanciada no construtor) — e só precisa preencher o CORPO dos métodos,
+// que vêm com um throw de "pendente" (por isso um envio sem alterações
+// sempre falha, igual aos outros dois simuladores). O WebDriver (`driver`)
+// e os utilitários `By`/`Assert` já vêm prontos, injetados pelo motor —
+// o candidato nunca instancia nada disso.
+//
+// Convenção fixa em toda questão: as classes sempre se chamam `Page` e
+// `Steps` (o motor sempre faz `new Steps(driver)` no final). O texto de
+// cada anotação (`// @Dado("...")` etc.) precisa bater exatamente com a
+// linha correspondente da feature — é assim que o motor liga uma coisa à
+// outra, igual à reflection real do Cucumber-JVM.
 
-const STUB = '# Escreva aqui o cenário em Gherkin usando os steps disponíveis.\nDado que ainda não implementei este cenário';
+function pendente(metodo: string): string {
+  return `throw new Error('Implemente o método ${metodo}().');`;
+}
 
 export const QUESTOES: Questao[] = [
   {
     numero: 1,
     titulo: 'Deve exibir a tela de identificação ao acessar a aplicação',
     contexto:
-      'Todo teste começa do zero: o harness limpa o armazenamento local do app sob teste e recarrega o iframe antes de cada execução — você não precisa (nem deve) fazer isso manualmente.',
-    dado: 'que o app sob teste é acessado pela primeira vez, sem dados salvos',
-    entao: 'o sistema deve exibir a tela de identificação com os campos Nome completo e E-mail',
-    dica: '"Tela de identificação" / "Campo Nome completo" / "Campo E-mail"',
-    comandos: ['acesso a aplicação', 'devo ver'],
+      'Todo teste começa do zero: o motor limpa o armazenamento local do app sob teste e recarrega o iframe antes de cada execução — você não precisa (nem deve) fazer isso manualmente.',
+    dado: 'que acesso a aplicação',
+    entao: 'devo ver a tela de identificação',
+    dica: 'driver já vem pronto no construtor — não instancie nada, só use this.driver.',
+    comandos: ['driver.get', 'driver.findElement', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
-      'Escreva o step que acessa a aplicação.',
-      'Escreva um step confirmando que a "Tela de identificação" deve ser vista.',
-      'Escreva um step confirmando que o "Campo Nome completo" deve ser visto.',
-      'Escreva um step confirmando que o "Campo E-mail" deve ser visto.',
-      'Não é preciso preencher nada nesta questão — é só uma checagem do estado inicial.',
+      'Em Page.acessarPagina(), chame this.driver.get(\'/\').',
+      'Em Page.telaIdentificacaoEstaVisivel() (e nos outros dois getters), retorne this.driver.findElement(<localizador>).isDisplayed() — não precisa de await aqui, só devolva a Promise.',
+      'Em Steps, cada método @Dado/@Quando/@Então só chama o método correspondente da Page.',
+      'Nos métodos @Então/@E que fazem asserção, use await pra pegar o valor real antes de passar pro Assert.',
     ],
-    codigoInicial: STUB,
+    featureLinhas: [
+      'Dado que acesso a aplicação',
+      'Então devo ver a tela de identificação',
+      'E devo ver o campo de nome completo',
+      'E devo ver o campo de e-mail',
+    ],
+    codigoInicial: `class Page {
+  constructor(driver) {
+    this.driver = driver;
+    this.telaIdentificacao = By.cssSelector('[data-testid="identificacao-page"]');
+    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
+    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+  }
+
+  acessarPagina() {
+    ${pendente('acessarPagina')}
+  }
+
+  telaIdentificacaoEstaVisivel() {
+    ${pendente('telaIdentificacaoEstaVisivel')}
+  }
+
+  campoNomeEstaVisivel() {
+    ${pendente('campoNomeEstaVisivel')}
+  }
+
+  campoEmailEstaVisivel() {
+    ${pendente('campoEmailEstaVisivel')}
+  }
+}
+
+class Steps {
+  constructor(driver) {
+    this.page = new Page(driver);
+  }
+
+  // @Dado("que acesso a aplicação")
+  queAcessoAAplicacao() {
+    ${pendente('queAcessoAAplicacao')}
+  }
+
+  // @Então("devo ver a tela de identificação")
+  async devoVerATelaDeIdentificacao() {
+    ${pendente('devoVerATelaDeIdentificacao')}
+  }
+
+  // @E("devo ver o campo de nome completo")
+  async devoVerOCampoDeNomeCompleto() {
+    ${pendente('devoVerOCampoDeNomeCompleto')}
+  }
+
+  // @E("devo ver o campo de e-mail")
+  async devoVerOCampoDeEmail() {
+    ${pendente('devoVerOCampoDeEmail')}
+  }
+}`,
   },
   {
     numero: 2,
     titulo: 'Deve exibir erro ao informar um e-mail em formato inválido',
     contexto:
-      'Vai além do campo vazio: aqui o e-mail é preenchido, mas com um valor sem "@" (ex: "emailinvalido"), ou seja, um formato inválido.',
-    dado: 'que o candidato está na tela de identificação',
-    quando: 'preenche o nome e digita um e-mail sem "@" (ex: "emailinvalido")',
-    e: 'clica em "Iniciar avaliação"',
-    entao: 'o sistema deve exibir uma mensagem de erro de formato inválido e não avançar',
-    dica: '"Campo Nome completo" / "Campo E-mail" / "Botão Iniciar avaliação" / "Erro do e-mail"',
-    comandos: ['acesso a aplicação', 'preencho o campo', 'clico em', 'devo ver'],
+      'Vai além do campo vazio: aqui o e-mail é preenchido, mas com um valor sem "@", ou seja, um formato inválido.',
+    dado: 'que acesso a aplicação',
+    entao: 'devo ver a mensagem de erro do e-mail',
+    dica: 'Os métodos @Quando/@E que recebem valor da feature (ex: {string}) chegam como parâmetro do método — não precisa reler a feature.',
+    comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
-      'Escreva o step que acessa a aplicação.',
-      'Preencha o "Campo Nome completo" com qualquer texto válido.',
-      'Preencha o "Campo E-mail" com um valor sem "@".',
-      'Clique no "Botão Iniciar avaliação".',
-      'Confirme que o "Erro do e-mail" deve ser visto.',
+      'Em Page.preencherNome(nome) e preencherEmail(email), use this.driver.findElement(<localizador>).sendKeys(<valor>) — não precisa de await, é encadeado igual clique.',
+      'Em Page.clicarIniciar(), use this.driver.findElement(this.botaoIniciar).click().',
+      'Em Page.erroEmailEstaVisivel(), retorne this.driver.findElement(this.erroEmail).isDisplayed().',
+      'No Steps, os métodos @E preenchoONomeCom(nome) e preenchoOEmailCom(email) recebem o valor certo automaticamente (vem da feature) — só repasse pra Page.',
     ],
-    codigoInicial: STUB,
+    featureLinhas: [
+      'Dado que acesso a aplicação',
+      'Quando preencho o nome com "Fulano de Tal"',
+      'E preencho o e-mail com "emailinvalido"',
+      'E clico em iniciar avaliação',
+      'Então devo ver a mensagem de erro do e-mail',
+    ],
+    codigoInicial: `class Page {
+  constructor(driver) {
+    this.driver = driver;
+    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
+    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
+    this.erroEmail = By.cssSelector('[data-testid="erro-email"]');
+  }
+
+  acessarPagina() {
+    ${pendente('acessarPagina')}
+  }
+
+  preencherNome(nome) {
+    ${pendente('preencherNome')}
+  }
+
+  preencherEmail(email) {
+    ${pendente('preencherEmail')}
+  }
+
+  clicarIniciar() {
+    ${pendente('clicarIniciar')}
+  }
+
+  erroEmailEstaVisivel() {
+    ${pendente('erroEmailEstaVisivel')}
+  }
+}
+
+class Steps {
+  constructor(driver) {
+    this.page = new Page(driver);
+  }
+
+  // @Dado("que acesso a aplicação")
+  queAcessoAAplicacao() {
+    ${pendente('queAcessoAAplicacao')}
+  }
+
+  // @Quando("preencho o nome com {string}")
+  preenchoONomeCom(nome) {
+    ${pendente('preenchoONomeCom')}
+  }
+
+  // @E("preencho o e-mail com {string}")
+  preenchoOEmailCom(email) {
+    ${pendente('preenchoOEmailCom')}
+  }
+
+  // @E("clico em iniciar avaliação")
+  clicoEmIniciarAvaliacao() {
+    ${pendente('clicoEmIniciarAvaliacao')}
+  }
+
+  // @Então("devo ver a mensagem de erro do e-mail")
+  async devoVerAMensagemDeErroDoEmail() {
+    ${pendente('devoVerAMensagemDeErroDoEmail')}
+  }
+}`,
   },
   {
     numero: 3,
     titulo: 'Deve avançar para o Dashboard ao preencher nome e e-mail válidos',
     contexto: 'O caminho feliz da identificação.',
-    dado: 'que o candidato está na tela de identificação',
-    quando: 'preenche nome completo e e-mail válidos e confirma',
-    entao: 'o sistema deve exibir o Dashboard',
-    dica: '"Campo Nome completo" / "Campo E-mail" / "Botão Iniciar avaliação" / "Card de saldo" (só existe depois da identificação)',
-    comandos: ['acesso a aplicação', 'preencho o campo', 'clico em', 'devo ver'],
+    dado: 'que acesso a aplicação',
+    entao: 'devo ver o card de saldo',
+    dica: '[data-testid="card-saldo"] só existe depois da identificação.',
+    comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
-      'Escreva o step que acessa a aplicação.',
-      'Preencha o "Campo Nome completo" com um nome completo qualquer.',
-      'Preencha o "Campo E-mail" com um endereço em formato válido (com "@" e domínio).',
-      'Clique no "Botão Iniciar avaliação".',
-      'Confirme que o "Card de saldo" deve ser visto — ele só existe depois da identificação.',
+      'Mesma implementação da questão anterior pra preencherNome/preencherEmail/clicarIniciar/acessarPagina.',
+      'Em Page.cardSaldoEstaVisivel(), retorne this.driver.findElement(this.cardSaldo).isDisplayed().',
     ],
-    codigoInicial: STUB,
+    featureLinhas: [
+      'Dado que acesso a aplicação',
+      'Quando preencho o nome com "Fulano de Tal"',
+      'E preencho o e-mail com "fulano@exemplo.com"',
+      'E clico em iniciar avaliação',
+      'Então devo ver o card de saldo',
+    ],
+    codigoInicial: `class Page {
+  constructor(driver) {
+    this.driver = driver;
+    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
+    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
+    this.cardSaldo = By.cssSelector('[data-testid="card-saldo"]');
+  }
+
+  acessarPagina() {
+    ${pendente('acessarPagina')}
+  }
+
+  preencherNome(nome) {
+    ${pendente('preencherNome')}
+  }
+
+  preencherEmail(email) {
+    ${pendente('preencherEmail')}
+  }
+
+  clicarIniciar() {
+    ${pendente('clicarIniciar')}
+  }
+
+  cardSaldoEstaVisivel() {
+    ${pendente('cardSaldoEstaVisivel')}
+  }
+}
+
+class Steps {
+  constructor(driver) {
+    this.page = new Page(driver);
+  }
+
+  // @Dado("que acesso a aplicação")
+  queAcessoAAplicacao() {
+    ${pendente('queAcessoAAplicacao')}
+  }
+
+  // @Quando("preencho o nome com {string}")
+  preenchoONomeCom(nome) {
+    ${pendente('preenchoONomeCom')}
+  }
+
+  // @E("preencho o e-mail com {string}")
+  preenchoOEmailCom(email) {
+    ${pendente('preenchoOEmailCom')}
+  }
+
+  // @E("clico em iniciar avaliação")
+  clicoEmIniciarAvaliacao() {
+    ${pendente('clicoEmIniciarAvaliacao')}
+  }
+
+  // @Então("devo ver o card de saldo")
+  async devoVerOCardDeSaldo() {
+    ${pendente('devoVerOCardDeSaldo')}
+  }
+}`,
   },
   {
     numero: 4,
     titulo: 'Deve cadastrar uma receita com sucesso',
-    contexto: 'Fluxo completo de cadastro, do zero.',
-    dado: 'que o candidato preenche o modal de novo lançamento com tipo Receita',
-    quando: 'informa descrição, valor, categoria e data válidos e salva',
-    entao: 'o novo lançamento deve aparecer na lista de Lançamentos',
-    dica: '"Botão Nova transação" / "Tipo Receita" / "Campo Descrição" / "Campo Valor" / "Campo Categoria" / "Campo Data" / "Botão Salvar" / "Menu Lançamentos" / "Linha do lançamento"',
-    comandos: ['acesso a aplicação', 'preencho o campo', 'limpo o campo', 'seleciono a opção', 'clico em', 'deve conter o texto'],
+    contexto: 'Fluxo completo de cadastro, do zero, incluindo a identificação.',
+    dado: 'que acesso a aplicação',
+    entao: 'devo ver o lançamento "Salario" na lista',
+    dica: '[data-testid="input-data"] já vem com uma data padrão — dê .clear() antes de preencher com sendKeys(), senão o valor novo fica colado no antigo.',
+    comandos: ['driver.findElement', '.sendKeys()', '.clear()', '.click()', '.getText()', 'Assert.assertTrue'],
     passos: [
-      'Identifique-se primeiro — o estado é resetado antes de cada execução, então essa etapa precisa estar no cenário.',
-      'Clique no "Botão Nova transação".',
-      'Clique em "Tipo Receita".',
-      'Preencha "Campo Descrição", "Campo Valor" e "Campo Data" com valores válidos (limpe o "Campo Data" antes de preenchê-lo, já que ele já vem com uma data padrão).',
-      'Selecione uma opção válida no "Campo Categoria".',
-      'Clique no "Botão Salvar".',
-      'Clique no "Menu Lançamentos".',
-      'Confirme que a "Linha do lançamento" deve conter o texto da descrição usada.',
+      'Page.preencherData(data) precisa limpar o campo antes de digitar: this.driver.findElement(this.campoData).clear() e depois .sendKeys(data).',
+      'Page.listaContemLancamento(descricao) precisa ser assíncrono: leia o texto com await this.driver.findElement(this.linhaLancamento).getText() e devolva se esse texto inclui a descrição (String.includes).',
+      'Os demais métodos de ação (clicar/preencher/selecionar) seguem o mesmo padrão das questões anteriores.',
     ],
-    codigoInicial: STUB,
+    featureLinhas: [
+      'Dado que acesso a aplicação',
+      'E preencho o nome com "Fulano de Tal"',
+      'E preencho o e-mail com "fulano@exemplo.com"',
+      'E clico em iniciar avaliação',
+      'Quando clico em nova transação',
+      'E clico no tipo receita',
+      'E preencho a descrição com "Salario"',
+      'E preencho o valor com "1000"',
+      'E seleciono a categoria "Salário"',
+      'E preencho a data com "2024-01-10"',
+      'E clico em salvar',
+      'E clico em lançamentos',
+      'Então devo ver o lançamento "Salario" na lista',
+    ],
+    codigoInicial: `class Page {
+  constructor(driver) {
+    this.driver = driver;
+    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
+    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
+    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
+    this.tipoReceita = By.cssSelector('[data-testid="tipo-receita"]');
+    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
+    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
+    this.campoCategoria = By.cssSelector('[data-testid="select-categoria"]');
+    this.campoData = By.cssSelector('[data-testid="input-data"]');
+    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
+    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
+    this.linhaLancamento = By.cssSelector('[data-testid="linha-lancamento"]');
+  }
+
+  acessarPagina() {
+    ${pendente('acessarPagina')}
+  }
+
+  preencherNome(nome) {
+    ${pendente('preencherNome')}
+  }
+
+  preencherEmail(email) {
+    ${pendente('preencherEmail')}
+  }
+
+  clicarIniciar() {
+    ${pendente('clicarIniciar')}
+  }
+
+  clicarNovaTransacao() {
+    ${pendente('clicarNovaTransacao')}
+  }
+
+  clicarTipoReceita() {
+    ${pendente('clicarTipoReceita')}
+  }
+
+  preencherDescricao(descricao) {
+    ${pendente('preencherDescricao')}
+  }
+
+  preencherValor(valor) {
+    ${pendente('preencherValor')}
+  }
+
+  selecionarCategoria(categoria) {
+    ${pendente('selecionarCategoria')}
+  }
+
+  preencherData(data) {
+    ${pendente('preencherData')}
+  }
+
+  clicarSalvar() {
+    ${pendente('clicarSalvar')}
+  }
+
+  clicarLancamentos() {
+    ${pendente('clicarLancamentos')}
+  }
+
+  listaContemLancamento(descricao) {
+    ${pendente('listaContemLancamento')}
+  }
+}
+
+class Steps {
+  constructor(driver) {
+    this.page = new Page(driver);
+  }
+
+  // @Dado("que acesso a aplicação")
+  queAcessoAAplicacao() {
+    ${pendente('queAcessoAAplicacao')}
+  }
+
+  // @E("preencho o nome com {string}")
+  preenchoONomeCom(nome) {
+    ${pendente('preenchoONomeCom')}
+  }
+
+  // @E("preencho o e-mail com {string}")
+  preenchoOEmailCom(email) {
+    ${pendente('preenchoOEmailCom')}
+  }
+
+  // @E("clico em iniciar avaliação")
+  clicoEmIniciarAvaliacao() {
+    ${pendente('clicoEmIniciarAvaliacao')}
+  }
+
+  // @Quando("clico em nova transação")
+  clicoEmNovaTransacao() {
+    ${pendente('clicoEmNovaTransacao')}
+  }
+
+  // @E("clico no tipo receita")
+  clicoNoTipoReceita() {
+    ${pendente('clicoNoTipoReceita')}
+  }
+
+  // @E("preencho a descrição com {string}")
+  preenchoADescricaoCom(descricao) {
+    ${pendente('preenchoADescricaoCom')}
+  }
+
+  // @E("preencho o valor com {string}")
+  preenchoOValorCom(valor) {
+    ${pendente('preenchoOValorCom')}
+  }
+
+  // @E("seleciono a categoria {string}")
+  selecionoACategoria(categoria) {
+    ${pendente('selecionoACategoria')}
+  }
+
+  // @E("preencho a data com {string}")
+  preenchoADataCom(data) {
+    ${pendente('preenchoADataCom')}
+  }
+
+  // @E("clico em salvar")
+  clicoEmSalvar() {
+    ${pendente('clicoEmSalvar')}
+  }
+
+  // @E("clico em lançamentos")
+  clicoEmLancamentos() {
+    ${pendente('clicoEmLancamentos')}
+  }
+
+  // @Então("devo ver o lançamento {string} na lista")
+  async devoVerOLancamentoNaLista(descricao) {
+    ${pendente('devoVerOLancamentoNaLista')}
+  }
+}`,
   },
   {
     numero: 5,
     titulo: 'Deve editar um lançamento existente e refletir a alteração na lista',
     contexto:
-      'Depende de já existir um lançamento — como o estado é resetado a cada execução, o próprio cenário desta questão precisa criar um lançamento primeiro antes de editá-lo.',
-    dado: 'que existe um lançamento cadastrado',
-    quando: 'o candidato clica em editar, altera a descrição e salva',
-    entao: 'a lista de lançamentos deve exibir a descrição atualizada',
-    dica: '"Botão Editar" / "Campo Descrição" / "Botão Salvar" / "Descrição do lançamento"',
-    comandos: ['acesso a aplicação', 'preencho o campo', 'limpo o campo', 'clico em', 'deve conter o texto'],
+      'Depende de já existir um lançamento — como o estado é resetado a cada execução, o próprio cenário desta questão cadastra um lançamento primeiro antes de editá-lo.',
+    dado: 'que acesso a aplicação',
+    entao: 'devo ver o lançamento "Mercado do mes" na lista',
+    dica: '[data-testid="btn-editar"] abre o mesmo modal do cadastro, já preenchido — só troque a descrição.',
+    comandos: ['driver.findElement', '.sendKeys()', '.clear()', '.click()', '.getText()', 'Assert.assertTrue'],
     passos: [
-      'Identifique-se e cadastre um lançamento qualquer (descrição, valor e data válidos).',
-      'Vá até o "Menu Lançamentos".',
-      'Clique no "Botão Editar" desse lançamento.',
-      'Limpe o "Campo Descrição" e preencha com uma descrição nova.',
-      'Clique no "Botão Salvar" novamente.',
-      'Confirme que a "Descrição do lançamento" deve conter o texto da descrição nova, não mais a antiga.',
+      'Reaproveite a mesma lógica de preencherData (clear + sendKeys) e listaContemLancamento das questões anteriores.',
+      'Page.limparDescricao() só precisa de this.driver.findElement(this.campoDescricao).clear().',
+      'Page.clicarEditar() clica no botão de editar do lançamento já cadastrado.',
     ],
-    codigoInicial: STUB,
+    featureLinhas: [
+      'Dado que acesso a aplicação',
+      'E preencho o nome com "Fulano de Tal"',
+      'E preencho o e-mail com "fulano@exemplo.com"',
+      'E clico em iniciar avaliação',
+      'E clico em nova transação',
+      'E preencho a descrição com "Mercado"',
+      'E preencho o valor com "150"',
+      'E preencho a data com "2024-01-10"',
+      'E clico em salvar',
+      'E clico em lançamentos',
+      'Quando clico em editar',
+      'E limpo a descrição',
+      'E preencho a descrição com "Mercado do mes"',
+      'E clico em salvar',
+      'Então devo ver o lançamento "Mercado do mes" na lista',
+    ],
+    codigoInicial: `class Page {
+  constructor(driver) {
+    this.driver = driver;
+    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
+    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
+    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
+    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
+    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
+    this.campoData = By.cssSelector('[data-testid="input-data"]');
+    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
+    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
+    this.botaoEditar = By.cssSelector('[data-testid="btn-editar"]');
+    this.linhaLancamento = By.cssSelector('[data-testid="linha-lancamento"]');
+  }
+
+  acessarPagina() {
+    ${pendente('acessarPagina')}
+  }
+
+  preencherNome(nome) {
+    ${pendente('preencherNome')}
+  }
+
+  preencherEmail(email) {
+    ${pendente('preencherEmail')}
+  }
+
+  clicarIniciar() {
+    ${pendente('clicarIniciar')}
+  }
+
+  clicarNovaTransacao() {
+    ${pendente('clicarNovaTransacao')}
+  }
+
+  preencherDescricao(descricao) {
+    ${pendente('preencherDescricao')}
+  }
+
+  limparDescricao() {
+    ${pendente('limparDescricao')}
+  }
+
+  preencherValor(valor) {
+    ${pendente('preencherValor')}
+  }
+
+  preencherData(data) {
+    ${pendente('preencherData')}
+  }
+
+  clicarSalvar() {
+    ${pendente('clicarSalvar')}
+  }
+
+  clicarLancamentos() {
+    ${pendente('clicarLancamentos')}
+  }
+
+  clicarEditar() {
+    ${pendente('clicarEditar')}
+  }
+
+  listaContemLancamento(descricao) {
+    ${pendente('listaContemLancamento')}
+  }
+}
+
+class Steps {
+  constructor(driver) {
+    this.page = new Page(driver);
+  }
+
+  // @Dado("que acesso a aplicação")
+  queAcessoAAplicacao() {
+    ${pendente('queAcessoAAplicacao')}
+  }
+
+  // @E("preencho o nome com {string}")
+  preenchoONomeCom(nome) {
+    ${pendente('preenchoONomeCom')}
+  }
+
+  // @E("preencho o e-mail com {string}")
+  preenchoOEmailCom(email) {
+    ${pendente('preenchoOEmailCom')}
+  }
+
+  // @E("clico em iniciar avaliação")
+  clicoEmIniciarAvaliacao() {
+    ${pendente('clicoEmIniciarAvaliacao')}
+  }
+
+  // @E("clico em nova transação")
+  clicoEmNovaTransacao() {
+    ${pendente('clicoEmNovaTransacao')}
+  }
+
+  // @E("preencho a descrição com {string}")
+  preenchoADescricaoCom(descricao) {
+    ${pendente('preenchoADescricaoCom')}
+  }
+
+  // @E("preencho o valor com {string}")
+  preenchoOValorCom(valor) {
+    ${pendente('preenchoOValorCom')}
+  }
+
+  // @E("preencho a data com {string}")
+  preenchoADataCom(data) {
+    ${pendente('preenchoADataCom')}
+  }
+
+  // @E("clico em salvar")
+  clicoEmSalvar() {
+    ${pendente('clicoEmSalvar')}
+  }
+
+  // @E("clico em lançamentos")
+  clicoEmLancamentos() {
+    ${pendente('clicoEmLancamentos')}
+  }
+
+  // @Quando("clico em editar")
+  clicoEmEditar() {
+    ${pendente('clicoEmEditar')}
+  }
+
+  // @E("limpo a descrição")
+  limpoADescricao() {
+    ${pendente('limpoADescricao')}
+  }
+
+  // @Então("devo ver o lançamento {string} na lista")
+  async devoVerOLancamentoNaLista(descricao) {
+    ${pendente('devoVerOLancamentoNaLista')}
+  }
+}`,
   },
   {
     numero: 6,
     titulo: 'Deve excluir um lançamento após confirmação',
     contexto: 'Também precisa de um lançamento prévio, criado dentro do próprio cenário da questão.',
-    dado: 'que existe um lançamento cadastrado',
-    quando: 'o candidato clica em excluir e confirma a exclusão',
-    entao: 'o lançamento não deve mais aparecer na lista',
-    dica: '"Botão Excluir" / "Botão Confirmar exclusão" / "Lista vazia"',
-    comandos: ['acesso a aplicação', 'preencho o campo', 'limpo o campo', 'clico em', 'devo ver'],
+    dado: 'que acesso a aplicação',
+    entao: 'devo ver a lista vazia',
+    dica: '[data-testid="btn-excluir"] abre um modal de confirmação — o clique que realmente exclui é em outro botão, o de confirmar.',
+    comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
-      'Identifique-se e cadastre um lançamento qualquer.',
-      'Vá até o "Menu Lançamentos".',
-      'Clique no "Botão Excluir" desse lançamento — isso deve abrir um modal de confirmação.',
-      'Clique no "Botão Confirmar exclusão".',
-      'Confirme que a "Lista vazia" deve ser vista (era o único lançamento cadastrado).',
+      'Page.clicarExcluir() clica no botão de excluir do lançamento.',
+      'Page.clicarConfirmarExclusao() clica no botão de confirmar dentro do modal.',
+      'Page.listaVaziaEstaVisivel() retorna this.driver.findElement(this.listaVazia).isDisplayed().',
     ],
-    codigoInicial: STUB,
+    featureLinhas: [
+      'Dado que acesso a aplicação',
+      'E preencho o nome com "Fulano de Tal"',
+      'E preencho o e-mail com "fulano@exemplo.com"',
+      'E clico em iniciar avaliação',
+      'E clico em nova transação',
+      'E preencho a descrição com "Cinema"',
+      'E preencho o valor com "40"',
+      'E preencho a data com "2024-01-10"',
+      'E clico em salvar',
+      'E clico em lançamentos',
+      'Quando clico em excluir',
+      'E clico em confirmar exclusão',
+      'Então devo ver a lista vazia',
+    ],
+    codigoInicial: `class Page {
+  constructor(driver) {
+    this.driver = driver;
+    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
+    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
+    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
+    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
+    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
+    this.campoData = By.cssSelector('[data-testid="input-data"]');
+    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
+    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
+    this.botaoExcluir = By.cssSelector('[data-testid="btn-excluir"]');
+    this.botaoConfirmarExclusao = By.cssSelector('[data-testid="btn-confirmar-exclusao"]');
+    this.listaVazia = By.cssSelector('[data-testid="lista-vazia"]');
+  }
+
+  acessarPagina() {
+    ${pendente('acessarPagina')}
+  }
+
+  preencherNome(nome) {
+    ${pendente('preencherNome')}
+  }
+
+  preencherEmail(email) {
+    ${pendente('preencherEmail')}
+  }
+
+  clicarIniciar() {
+    ${pendente('clicarIniciar')}
+  }
+
+  clicarNovaTransacao() {
+    ${pendente('clicarNovaTransacao')}
+  }
+
+  preencherDescricao(descricao) {
+    ${pendente('preencherDescricao')}
+  }
+
+  preencherValor(valor) {
+    ${pendente('preencherValor')}
+  }
+
+  preencherData(data) {
+    ${pendente('preencherData')}
+  }
+
+  clicarSalvar() {
+    ${pendente('clicarSalvar')}
+  }
+
+  clicarLancamentos() {
+    ${pendente('clicarLancamentos')}
+  }
+
+  clicarExcluir() {
+    ${pendente('clicarExcluir')}
+  }
+
+  clicarConfirmarExclusao() {
+    ${pendente('clicarConfirmarExclusao')}
+  }
+
+  listaVaziaEstaVisivel() {
+    ${pendente('listaVaziaEstaVisivel')}
+  }
+}
+
+class Steps {
+  constructor(driver) {
+    this.page = new Page(driver);
+  }
+
+  // @Dado("que acesso a aplicação")
+  queAcessoAAplicacao() {
+    ${pendente('queAcessoAAplicacao')}
+  }
+
+  // @E("preencho o nome com {string}")
+  preenchoONomeCom(nome) {
+    ${pendente('preenchoONomeCom')}
+  }
+
+  // @E("preencho o e-mail com {string}")
+  preenchoOEmailCom(email) {
+    ${pendente('preenchoOEmailCom')}
+  }
+
+  // @E("clico em iniciar avaliação")
+  clicoEmIniciarAvaliacao() {
+    ${pendente('clicoEmIniciarAvaliacao')}
+  }
+
+  // @E("clico em nova transação")
+  clicoEmNovaTransacao() {
+    ${pendente('clicoEmNovaTransacao')}
+  }
+
+  // @E("preencho a descrição com {string}")
+  preenchoADescricaoCom(descricao) {
+    ${pendente('preenchoADescricaoCom')}
+  }
+
+  // @E("preencho o valor com {string}")
+  preenchoOValorCom(valor) {
+    ${pendente('preenchoOValorCom')}
+  }
+
+  // @E("preencho a data com {string}")
+  preenchoADataCom(data) {
+    ${pendente('preenchoADataCom')}
+  }
+
+  // @E("clico em salvar")
+  clicoEmSalvar() {
+    ${pendente('clicoEmSalvar')}
+  }
+
+  // @E("clico em lançamentos")
+  clicoEmLancamentos() {
+    ${pendente('clicoEmLancamentos')}
+  }
+
+  // @Quando("clico em excluir")
+  clicoEmExcluir() {
+    ${pendente('clicoEmExcluir')}
+  }
+
+  // @E("clico em confirmar exclusão")
+  clicoEmConfirmarExclusao() {
+    ${pendente('clicoEmConfirmarExclusao')}
+  }
+
+  // @Então("devo ver a lista vazia")
+  async devoVerAListaVazia() {
+    ${pendente('devoVerAListaVazia')}
+  }
+}`,
   },
   {
     numero: 7,
     titulo: 'Deve filtrar os lançamentos por tipo',
     contexto: 'Precisa de pelo menos um lançamento de cada tipo, cadastrados dentro do próprio cenário da questão.',
-    dado: 'que existem lançamentos de receita e de despesa cadastrados',
-    quando: 'o candidato filtra a lista por tipo "Receita"',
-    entao: 'somente lançamentos de receita devem ser exibidos',
-    dica: '"Tipo Receita" / "Tipo Despesa" / "Campo Filtro de tipo" (aceita os valores "Receita"/"Despesa"/"Todos")',
-    comandos: ['acesso a aplicação', 'preencho o campo', 'limpo o campo', 'clico em', 'seleciono a opção', 'lista deve ter N itens', 'deve conter o texto'],
+    dado: 'que acesso a aplicação',
+    entao: 'devo ver o lançamento "Salario" na lista',
+    dica: 'O <select> de filtro usa valores internos em inglês: "income" pra Receita e "expense" pra Despesa — não é o texto visível.',
+    comandos: ['driver.findElement', '.sendKeys()', '.click()', '.selectByValue()', '.getText()', 'Assert.assertTrue/assertFalse'],
     passos: [
-      'Identifique-se.',
-      'Cadastre um lançamento do tipo Receita.',
-      'Cadastre um lançamento do tipo Despesa.',
-      'Vá até o "Menu Lançamentos".',
-      'Selecione a opção "Receita" no "Campo Filtro de tipo".',
-      'Confirme que a lista de lançamentos deve ter 1 item.',
-      'Confirme que a "Linha do lançamento" deve conter o texto da descrição da receita.',
+      'Page.filtrarPorTipo(tipo) recebe "Receita" (texto da feature) e precisa traduzir pra "income" antes de chamar this.driver.findElement(this.filtroTipo).selectByValue("income").',
+      'Reaproveite Page.listaContemLancamento(descricao) da questão 4 pras duas asserções (uma com Assert.assertTrue, outra com Assert.assertFalse).',
     ],
-    codigoInicial: STUB,
+    featureLinhas: [
+      'Dado que acesso a aplicação',
+      'E preencho o nome com "Fulano de Tal"',
+      'E preencho o e-mail com "fulano@exemplo.com"',
+      'E clico em iniciar avaliação',
+      'E clico em nova transação',
+      'E clico no tipo receita',
+      'E preencho a descrição com "Salario"',
+      'E preencho o valor com "1000"',
+      'E preencho a data com "2024-01-10"',
+      'E clico em salvar',
+      'E clico em nova transação',
+      'E clico no tipo despesa',
+      'E preencho a descrição com "Aluguel"',
+      'E preencho o valor com "800"',
+      'E preencho a data com "2024-01-10"',
+      'E clico em salvar',
+      'E clico em lançamentos',
+      'Quando filtro por tipo "Receita"',
+      'Então devo ver o lançamento "Salario" na lista',
+      'E não devo ver o lançamento "Aluguel" na lista',
+    ],
+    codigoInicial: `class Page {
+  constructor(driver) {
+    this.driver = driver;
+    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
+    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
+    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
+    this.tipoReceita = By.cssSelector('[data-testid="tipo-receita"]');
+    this.tipoDespesa = By.cssSelector('[data-testid="tipo-despesa"]');
+    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
+    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
+    this.campoData = By.cssSelector('[data-testid="input-data"]');
+    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
+    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
+    this.filtroTipo = By.cssSelector('[data-testid="filtro-tipo"]');
+    this.linhaLancamento = By.cssSelector('[data-testid="linha-lancamento"]');
+  }
+
+  acessarPagina() {
+    ${pendente('acessarPagina')}
+  }
+
+  preencherNome(nome) {
+    ${pendente('preencherNome')}
+  }
+
+  preencherEmail(email) {
+    ${pendente('preencherEmail')}
+  }
+
+  clicarIniciar() {
+    ${pendente('clicarIniciar')}
+  }
+
+  clicarNovaTransacao() {
+    ${pendente('clicarNovaTransacao')}
+  }
+
+  clicarTipoReceita() {
+    ${pendente('clicarTipoReceita')}
+  }
+
+  clicarTipoDespesa() {
+    ${pendente('clicarTipoDespesa')}
+  }
+
+  preencherDescricao(descricao) {
+    ${pendente('preencherDescricao')}
+  }
+
+  preencherValor(valor) {
+    ${pendente('preencherValor')}
+  }
+
+  preencherData(data) {
+    ${pendente('preencherData')}
+  }
+
+  clicarSalvar() {
+    ${pendente('clicarSalvar')}
+  }
+
+  clicarLancamentos() {
+    ${pendente('clicarLancamentos')}
+  }
+
+  filtrarPorTipo(tipo) {
+    ${pendente('filtrarPorTipo')}
+  }
+
+  listaContemLancamento(descricao) {
+    ${pendente('listaContemLancamento')}
+  }
+}
+
+class Steps {
+  constructor(driver) {
+    this.page = new Page(driver);
+  }
+
+  // @Dado("que acesso a aplicação")
+  queAcessoAAplicacao() {
+    ${pendente('queAcessoAAplicacao')}
+  }
+
+  // @E("preencho o nome com {string}")
+  preenchoONomeCom(nome) {
+    ${pendente('preenchoONomeCom')}
+  }
+
+  // @E("preencho o e-mail com {string}")
+  preenchoOEmailCom(email) {
+    ${pendente('preenchoOEmailCom')}
+  }
+
+  // @E("clico em iniciar avaliação")
+  clicoEmIniciarAvaliacao() {
+    ${pendente('clicoEmIniciarAvaliacao')}
+  }
+
+  // @E("clico em nova transação")
+  clicoEmNovaTransacao() {
+    ${pendente('clicoEmNovaTransacao')}
+  }
+
+  // @E("clico no tipo receita")
+  clicoNoTipoReceita() {
+    ${pendente('clicoNoTipoReceita')}
+  }
+
+  // @E("clico no tipo despesa")
+  clicoNoTipoDespesa() {
+    ${pendente('clicoNoTipoDespesa')}
+  }
+
+  // @E("preencho a descrição com {string}")
+  preenchoADescricaoCom(descricao) {
+    ${pendente('preenchoADescricaoCom')}
+  }
+
+  // @E("preencho o valor com {string}")
+  preenchoOValorCom(valor) {
+    ${pendente('preenchoOValorCom')}
+  }
+
+  // @E("preencho a data com {string}")
+  preenchoADataCom(data) {
+    ${pendente('preenchoADataCom')}
+  }
+
+  // @E("clico em salvar")
+  clicoEmSalvar() {
+    ${pendente('clicoEmSalvar')}
+  }
+
+  // @E("clico em lançamentos")
+  clicoEmLancamentos() {
+    ${pendente('clicoEmLancamentos')}
+  }
+
+  // @Quando("filtro por tipo {string}")
+  filtroPorTipo(tipo) {
+    ${pendente('filtroPorTipo')}
+  }
+
+  // @Então("devo ver o lançamento {string} na lista")
+  async devoVerOLancamentoNaLista(descricao) {
+    ${pendente('devoVerOLancamentoNaLista')}
+  }
+
+  // @E("não devo ver o lançamento {string} na lista")
+  async naoDevoVerOLancamentoNaLista(descricao) {
+    ${pendente('naoDevoVerOLancamentoNaLista')}
+  }
+}`,
   },
   {
     numero: 8,
     titulo: 'Deve manter os lançamentos após recarregar a página',
     contexto: 'Testa a persistência local dos dados, não um cadastro em si.',
-    dado: 'que o candidato cadastrou um lançamento',
-    quando: 'a página é recarregada',
-    entao: 'o lançamento cadastrado deve continuar aparecendo na lista (persistência local)',
-    dica: 'O step "a página é recarregada" recarrega o app sem apagar o localStorage, ao contrário do step "que acesso a aplicação"',
-    comandos: ['acesso a aplicação', 'preencho o campo', 'limpo o campo', 'clico em', 'a página é recarregada', 'deve conter o texto'],
+    dado: 'que acesso a aplicação',
+    entao: 'devo ver o lançamento "Aluguel" na lista',
+    dica: 'driver.navigate().refresh() recarrega sem apagar o localStorage — diferente de driver.get(\'/\'), que reinicia o estado.',
+    comandos: ['driver.findElement', '.sendKeys()', '.click()', 'driver.navigate().refresh()', '.getText()', 'Assert.assertTrue'],
     passos: [
-      'Identifique-se e cadastre um lançamento qualquer.',
-      'Vá até o "Menu Lançamentos" e confirme que ele deve conter o texto da descrição.',
-      'Use o step "a página é recarregada" (não o de acessar a aplicação, que reinicia todo o estado salvo).',
-      'Volte para o "Menu Lançamentos", se necessário.',
-      'Confirme de novo que a "Linha do lançamento" deve conter o mesmo texto, mostrando que os dados persistiram.',
+      'Page.recarregarPagina() chama this.driver.navigate().refresh().',
+      'O resto reaproveita a mesma lógica das questões de cadastro/lista anteriores.',
     ],
-    codigoInicial: STUB,
+    featureLinhas: [
+      'Dado que acesso a aplicação',
+      'E preencho o nome com "Fulano de Tal"',
+      'E preencho o e-mail com "fulano@exemplo.com"',
+      'E clico em iniciar avaliação',
+      'E clico em nova transação',
+      'E preencho a descrição com "Aluguel"',
+      'E preencho o valor com "500"',
+      'E preencho a data com "2024-01-10"',
+      'E clico em salvar',
+      'E clico em lançamentos',
+      'E devo ver o lançamento "Aluguel" na lista',
+      'Quando recarrego a página',
+      'E clico em lançamentos',
+      'Então devo ver o lançamento "Aluguel" na lista',
+    ],
+    codigoInicial: `class Page {
+  constructor(driver) {
+    this.driver = driver;
+    this.campoNome = By.cssSelector('[data-testid="input-nome"]');
+    this.campoEmail = By.cssSelector('[data-testid="input-email"]');
+    this.botaoIniciar = By.cssSelector('[data-testid="btn-iniciar"]');
+    this.botaoNovaTransacao = By.cssSelector('[data-testid="btn-nova-transacao"]');
+    this.campoDescricao = By.cssSelector('[data-testid="input-descricao"]');
+    this.campoValor = By.cssSelector('[data-testid="input-valor"]');
+    this.campoData = By.cssSelector('[data-testid="input-data"]');
+    this.botaoSalvar = By.cssSelector('[data-testid="btn-salvar"]');
+    this.menuLancamentos = By.cssSelector('[data-testid="nav-lancamentos"]');
+    this.linhaLancamento = By.cssSelector('[data-testid="linha-lancamento"]');
+  }
+
+  acessarPagina() {
+    ${pendente('acessarPagina')}
+  }
+
+  preencherNome(nome) {
+    ${pendente('preencherNome')}
+  }
+
+  preencherEmail(email) {
+    ${pendente('preencherEmail')}
+  }
+
+  clicarIniciar() {
+    ${pendente('clicarIniciar')}
+  }
+
+  clicarNovaTransacao() {
+    ${pendente('clicarNovaTransacao')}
+  }
+
+  preencherDescricao(descricao) {
+    ${pendente('preencherDescricao')}
+  }
+
+  preencherValor(valor) {
+    ${pendente('preencherValor')}
+  }
+
+  preencherData(data) {
+    ${pendente('preencherData')}
+  }
+
+  clicarSalvar() {
+    ${pendente('clicarSalvar')}
+  }
+
+  clicarLancamentos() {
+    ${pendente('clicarLancamentos')}
+  }
+
+  recarregarPagina() {
+    ${pendente('recarregarPagina')}
+  }
+
+  listaContemLancamento(descricao) {
+    ${pendente('listaContemLancamento')}
+  }
+}
+
+class Steps {
+  constructor(driver) {
+    this.page = new Page(driver);
+  }
+
+  // @Dado("que acesso a aplicação")
+  queAcessoAAplicacao() {
+    ${pendente('queAcessoAAplicacao')}
+  }
+
+  // @E("preencho o nome com {string}")
+  preenchoONomeCom(nome) {
+    ${pendente('preenchoONomeCom')}
+  }
+
+  // @E("preencho o e-mail com {string}")
+  preenchoOEmailCom(email) {
+    ${pendente('preenchoOEmailCom')}
+  }
+
+  // @E("clico em iniciar avaliação")
+  clicoEmIniciarAvaliacao() {
+    ${pendente('clicoEmIniciarAvaliacao')}
+  }
+
+  // @E("clico em nova transação")
+  clicoEmNovaTransacao() {
+    ${pendente('clicoEmNovaTransacao')}
+  }
+
+  // @E("preencho a descrição com {string}")
+  preenchoADescricaoCom(descricao) {
+    ${pendente('preenchoADescricaoCom')}
+  }
+
+  // @E("preencho o valor com {string}")
+  preenchoOValorCom(valor) {
+    ${pendente('preenchoOValorCom')}
+  }
+
+  // @E("preencho a data com {string}")
+  preenchoADataCom(data) {
+    ${pendente('preenchoADataCom')}
+  }
+
+  // @E("clico em salvar")
+  clicoEmSalvar() {
+    ${pendente('clicoEmSalvar')}
+  }
+
+  // @E("clico em lançamentos")
+  clicoEmLancamentos() {
+    ${pendente('clicoEmLancamentos')}
+  }
+
+  // @E("devo ver o lançamento {string} na lista")
+  async devoVerOLancamentoNaLista(descricao) {
+    ${pendente('devoVerOLancamentoNaLista')}
+  }
+
+  // @Quando("recarrego a página")
+  recarregoAPagina() {
+    ${pendente('recarregoAPagina')}
+  }
+}`,
   },
 ];
