@@ -1,19 +1,30 @@
 import { useEffect, useRef } from 'react';
-import { useSimuladorStore } from '../store/useSimuladorStore';
+import type { UseBoundStore, StoreApi } from 'zustand';
+import type { SimuladorState } from '../store/criarSimuladorStore';
+import type { Questao } from '../types';
 import { enviarRelatorio } from '../email/enviarRelatorio';
 
-export function RelatorioFinal() {
-  const candidato = useSimuladorStore((s) => s.candidato);
-  const respostas = useSimuladorStore((s) => s.respostas);
-  const envioStatus = useSimuladorStore((s) => s.envioStatus);
-  const setEnvioStatus = useSimuladorStore((s) => s.setEnvioStatus);
+interface Props {
+  useStore: UseBoundStore<StoreApi<SimuladorState>>;
+  questoes: Questao[];
+  nomeProva: string;
+}
+
+// Compartilhado entre o simulador Cypress e o Cucumber: ambos usam stores
+// com o mesmo formato (criadas por criarSimuladorStore), então essa tela só
+// precisa receber qual store e qual lista de questões usar.
+export function RelatorioFinal({ useStore, questoes, nomeProva }: Props) {
+  const candidato = useStore((s) => s.candidato);
+  const respostas = useStore((s) => s.respostas);
+  const envioStatus = useStore((s) => s.envioStatus);
+  const setEnvioStatus = useStore((s) => s.setEnvioStatus);
   const jaEnviou = useRef(false);
 
   useEffect(() => {
     if (jaEnviou.current || !candidato) return;
     jaEnviou.current = true;
     setEnvioStatus('enviando');
-    enviarRelatorio(candidato, respostas).then((resultado) => {
+    enviarRelatorio(questoes, candidato, respostas, nomeProva).then((resultado) => {
       // Motivo do erro só vai pro console (ajuda quem for depurar o envio):
       // a tela do candidato mostra só um aviso genérico, sem detalhes técnicos.
       if (!resultado.ok) console.error('Falha ao enviar relatório da avaliação:', resultado.motivo);

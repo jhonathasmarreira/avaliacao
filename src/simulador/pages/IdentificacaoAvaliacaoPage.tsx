@@ -1,16 +1,25 @@
 import { useState } from 'react';
-import { useSimuladorStore } from '../store/useSimuladorStore';
-import { QUESTOES } from '../questoes';
+import type { UseBoundStore, StoreApi } from 'zustand';
+import type { SimuladorState } from '../store/criarSimuladorStore';
 
 interface Errors {
   nomeCompleto?: string;
   email?: string;
 }
 
+interface Props {
+  useStore: UseBoundStore<StoreApi<SimuladorState>>;
+  logo: string;
+  titulo: string;
+  descricao: string;
+}
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function IdentificacaoAvaliacaoPage() {
-  const identificar = useSimuladorStore((s) => s.identificar);
+// Compartilhado entre o simulador Cypress e o Cucumber (mesmo formato de
+// store, ver criarSimuladorStore) — só muda o texto de apresentação.
+export function IdentificacaoAvaliacaoPage({ useStore, logo, titulo, descricao }: Props) {
+  const identificar = useStore((s) => s.identificar);
   const [nomeCompleto, setNomeCompleto] = useState('');
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<Errors>({});
@@ -35,12 +44,9 @@ export function IdentificacaoAvaliacaoPage() {
     <div data-testid="identificacao-avaliacao-page" className="id-wrapper">
       <div className="id-card">
         <div className="id-header">
-          <div className="id-logo">🧪</div>
-          <h1>Simulador Cypress — Avaliação Técnica</h1>
-          <p>
-            {QUESTOES.length} questões práticas. Você escreve o teste em um editor de código embutido e roda
-            direto no navegador — ao final, o resultado é enviado por e-mail automaticamente.
-          </p>
+          <div className="id-logo">{logo}</div>
+          <h1>{titulo}</h1>
+          <p>{descricao}</p>
         </div>
 
         <p data-testid="aviso-sem-salvamento" className="id-aviso">
