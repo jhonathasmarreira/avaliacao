@@ -14,7 +14,7 @@ createRoot(document.getElementById('root')!).render(
       questoes={QUESTOES}
       nomeProva="Simulador Cucumber"
       logo="🥒"
-      titulo="Simulador Cucumber — Avaliação Técnica"
+      titulo="Simulador Cucumber - Avaliação Técnica"
       descricao={`${QUESTOES.length} questões práticas no modelo Java/Cucumber/Selenium com Page Object. A feature (Gherkin) já vem pronta; você implementa os métodos das classes Page e Steps e roda direto no navegador — ao final, o resultado é enviado por e-mail automaticamente.`}
     >
       <SimuladorPage />

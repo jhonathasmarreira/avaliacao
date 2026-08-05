@@ -2,6 +2,25 @@ import { useState } from 'react';
 import type { Questao } from '../types';
 import { PassosModal } from './PassosModal';
 
+// Assertions aceitas pelo primeiro argumento de cy.get(...).should(...) —
+// ver checkShould em miniCy/asserts.ts. Exibida só quando a questão sugere
+// o comando `should`, pra dar uma pista de com o que preenchê-lo.
+const ASSERTIONS_SHOULD = [
+  'exist',
+  'not.exist',
+  'be.visible',
+  'not.be.visible',
+  'have.value',
+  'have.text',
+  'contain',
+  'have.length',
+  'be.checked',
+  'be.disabled',
+  'be.enabled',
+  'have.class',
+  'not.have.class',
+];
+
 export function QuestaoDescricao({ questao }: { questao: Questao }) {
   const [passosAbertos, setPassosAbertos] = useState(false);
 
@@ -46,6 +65,11 @@ export function QuestaoDescricao({ questao }: { questao: Questao }) {
       {questao.comandos && questao.comandos.length > 0 && (
         <p className="questao-comandos">
           Comandos sugeridos: <code>{questao.comandos.join(', ')}</code>
+        </p>
+      )}
+      {questao.comandos?.includes('should') && (
+        <p className="questao-comandos">
+          Dentro do <code>should(...)</code>, use: <code>{ASSERTIONS_SHOULD.join(', ')}</code>
         </p>
       )}
       {passosAbertos && questao.passos && (

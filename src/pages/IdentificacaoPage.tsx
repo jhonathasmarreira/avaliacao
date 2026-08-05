@@ -35,8 +35,8 @@ export function IdentificacaoPage() {
       <div className="id-card">
         <div className="id-header">
           <div className="id-logo">📝</div>
-          <h1>Avaliação Técnica — Cypress</h1>
-          <p>Informe seus dados para iniciar a avaliação</p>
+          <h1>Área de teste</h1>
+          <p>Preencha os dados fictícios para acessar o app financeiro</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -75,7 +75,7 @@ export function IdentificacaoPage() {
           </div>
 
           <button type="submit" data-testid="btn-iniciar" className="btn-primary btn-block">
-            Iniciar avaliação
+            Iniciar
           </button>
         </form>
       </div>
