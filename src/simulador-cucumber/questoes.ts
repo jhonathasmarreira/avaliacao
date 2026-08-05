@@ -17,7 +17,7 @@ import type { Questao } from '../simulador/types';
 // outra, igual à reflection real do Cucumber-JVM.
 
 function pendente(metodo: string): string {
-  return `throw new Error('Implemente o método ${metodo}().');`;
+  return `// TODO: apague a linha abaixo e escreva sua implementação aqui\n    throw new Error('Implemente o método ${metodo}().');`;
 }
 
 export const QUESTOES: Questao[] = [
