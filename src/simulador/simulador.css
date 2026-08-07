@@ -31,6 +31,38 @@
   min-height: 100vh;
 }
 
+.aviso-ausencia {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 560px;
+  width: calc(100% - 32px);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--warning);
+  background: var(--surface);
+  border: 1px solid var(--warning);
+  border-radius: 10px;
+  padding: 10px 12px 10px 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.aviso-ausencia-fechar {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+
 .simulador-sidebar {
   width: 300px;
   flex-shrink: 0;

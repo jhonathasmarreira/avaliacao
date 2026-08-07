@@ -13,7 +13,7 @@ export function PassosModal({ titulo, passos, onFechar }: Props) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="passos-header">
-          <h3>Passo a passo — {titulo}</h3>
+          <h3>Passo a passo - {titulo}</h3>
           <button
             data-testid="btn-fechar-passos"
             className="passos-fechar"

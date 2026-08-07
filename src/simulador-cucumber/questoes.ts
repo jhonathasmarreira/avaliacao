@@ -29,10 +29,10 @@ export const QUESTOES: Questao[] = [
     numero: 1,
     titulo: 'Deve exibir a tela de identificação ao acessar a aplicação',
     contexto:
-      'Antes de cada execução, o simulador já limpa os dados salvos do app sob teste e recarrega a página sozinho. Você não precisa (nem deve) fazer isso no seu código — comece direto pelo cenário abaixo.',
+      'Antes de cada execução, o simulador já limpa os dados salvos do app sob teste e recarrega a página sozinho. Você não precisa (nem deve) fazer isso no seu código. Comece direto pelo cenário abaixo.',
     dado: 'que acesso a aplicação',
     entao: 'devo ver a tela de identificação',
-    dica: 'driver já vem pronto no construtor — não instancie nada, só use this.driver.',
+    dica: 'driver já vem pronto no construtor: não instancie nada, só use this.driver.',
     localizadores: '[data-testid="identificacao-page"] / [data-testid="input-nome"] / [data-testid="input-email"]',
     comandos: ['driver.get', 'driver.findElement', '.isDisplayed()', 'Assert.assertTrue'],
     passos: [
@@ -49,7 +49,7 @@ export const QUESTOES: Questao[] = [
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')). Veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -121,7 +121,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')). Veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -182,7 +182,7 @@ class Steps {
     contexto: 'Fluxo completo de cadastro, do zero, incluindo a identificação.',
     dado: 'que acesso a aplicação',
     entao: 'devo ver o lançamento "Salario" na lista',
-    dica: '[data-testid="input-data"] já vem com uma data padrão — dê .clear() antes de preencher com sendKeys(), senão o valor novo fica colado no antigo.',
+    dica: '[data-testid="input-data"] já vem com uma data padrão: dê .clear() antes de preencher com sendKeys(), senão o valor novo fica colado no antigo.',
     localizadores:
       '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="tipo-receita"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="select-categoria"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.clear()', '.click()', '.getText()', 'Assert.assertTrue'],
@@ -210,7 +210,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')). Veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {

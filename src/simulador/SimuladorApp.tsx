@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { UseBoundStore, StoreApi } from 'zustand';
 import type { SimuladorState } from './store/criarSimuladorStore';
 import type { Questao } from './types';
@@ -36,11 +36,53 @@ export function SimuladorApp({ useStore, questoes, nomeProva, logo, titulo, desc
     return () => window.removeEventListener('beforeunload', handler);
   }, [fase]);
 
-  if (fase === 'identificacao') {
-    return <IdentificacaoAvaliacaoPage useStore={useStore} logo={logo} titulo={titulo} descricao={descricao} />;
-  }
-  if (fase === 'finalizado') {
-    return <RelatorioFinal useStore={useStore} questoes={questoes} nomeProva={nomeProva} />;
-  }
-  return <>{children}</>;
+  // Além do beforeunload (que só pega fechar/recarregar), avisa também quando o
+  // candidato troca de aba/janela ou minimiza o navegador durante a prova — não dá
+  // pra bloquear isso, então o aviso aparece só quando ele volta pra essa aba.
+  const [ausencias, setAusencias] = useState(0);
+  const [avisoAusenciaVisivel, setAvisoAusenciaVisivel] = useState(false);
+  const estavaOcultoRef = useRef(false);
+
+  useEffect(() => {
+    if (fase !== 'simulador') return;
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        estavaOcultoRef.current = true;
+        return;
+      }
+      if (!estavaOcultoRef.current) return;
+      estavaOcultoRef.current = false;
+      setAusencias((n) => n + 1);
+      setAvisoAusenciaVisivel(true);
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [fase]);
+
+  return (
+    <>
+      {fase === 'simulador' && avisoAusenciaVisivel && (
+        <div data-testid="aviso-ausencia" className="aviso-ausencia" role="alert">
+          <span>
+            ⚠ Você saiu da aba ou janela da avaliação{ausencias > 1 ? ` (${ausencias}x)` : ''}. Evite trocar de
+            aba ou minimizar o navegador até terminar a prova.
+          </span>
+          <button
+            data-testid="btn-fechar-aviso-ausencia"
+            className="aviso-ausencia-fechar"
+            onClick={() => setAvisoAusenciaVisivel(false)}
+            aria-label="Fechar aviso"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {fase === 'identificacao' && (
+        <IdentificacaoAvaliacaoPage useStore={useStore} logo={logo} titulo={titulo} descricao={descricao} />
+      )}
+      {fase === 'finalizado' && <RelatorioFinal useStore={useStore} questoes={questoes} nomeProva={nomeProva} />}
+      {fase === 'simulador' && children}
+    </>
+  );
 }

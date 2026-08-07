@@ -55,7 +55,7 @@ export function SimuladorPage() {
         </div>
 
         <p data-testid="aviso-sem-salvamento" className="simulador-aviso">
-          ⚠ Não recarregue (F5) nem feche a aba — não há salvamento automático e você perderá o
+          ⚠ Não recarregue (F5) nem feche a aba: não há salvamento automático e você perderá o
           progresso.
         </p>
 
@@ -126,7 +126,7 @@ export function SimuladorPage() {
             <p className="simulador-sandbox-titulo">App sob teste</p>
             <p className="simulador-sandbox-legenda">
               Aplicação financeira fictícia que seu código testa. Ela tem seu próprio login (nome/e-mail
-              de mentira) — diferente da sua identificação — que quase todo teste precisa passar antes de
+              de mentira, diferente da sua identificação) que quase todo teste precisa passar antes de
               chegar no Dashboard.
             </p>
             <SandboxFrame onReady={handleReady} />

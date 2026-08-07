@@ -23,7 +23,7 @@ export const QUESTOES_ARQUIVADAS: Questao[] = [
       'Vai além do campo vazio: aqui o e-mail é preenchido, mas com um valor sem "@", ou seja, um formato inválido.',
     dado: 'que acesso a aplicação',
     entao: 'devo ver a mensagem de erro do e-mail',
-    dica: 'Os métodos @Quando/@E que recebem valor da feature (ex: {string}) chegam como parâmetro do método — não precisa reler a feature.',
+    dica: 'Os métodos @Quando/@E que recebem valor da feature (ex: {string}) chegam como parâmetro do método: não precisa reler a feature.',
     localizadores:
       '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="erro-email"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
@@ -44,7 +44,7 @@ export const QUESTOES_ARQUIVADAS: Questao[] = [
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')). Veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -103,10 +103,10 @@ class Steps {
     numero: 5,
     titulo: 'Deve editar um lançamento existente e refletir a alteração na lista',
     contexto:
-      'Depende de já existir um lançamento — como o estado é resetado a cada execução, o próprio cenário desta questão cadastra um lançamento primeiro antes de editá-lo.',
+      'Depende de já existir um lançamento: como o estado é resetado a cada execução, o próprio cenário desta questão cadastra um lançamento primeiro antes de editá-lo.',
     dado: 'que acesso a aplicação',
     entao: 'devo ver o lançamento "Mercado do mes" na lista',
-    dica: '[data-testid="btn-editar"] abre o mesmo modal do cadastro, já preenchido — só troque a descrição.',
+    dica: '[data-testid="btn-editar"] abre o mesmo modal do cadastro, já preenchido: só troque a descrição.',
     localizadores:
       '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="btn-editar"] / [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.clear()', '.click()', '.getText()', 'Assert.assertTrue'],
@@ -136,7 +136,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')). Veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -269,7 +269,7 @@ class Steps {
     contexto: 'Também precisa de um lançamento prévio, criado dentro do próprio cenário da questão.',
     dado: 'que acesso a aplicação',
     entao: 'devo ver a lista vazia',
-    dica: '[data-testid="btn-excluir"] abre um modal de confirmação — o clique que realmente exclui é em outro botão, o de confirmar.',
+    dica: '[data-testid="btn-excluir"] abre um modal de confirmação. O clique que realmente exclui é em outro botão, o de confirmar.',
     localizadores:
       '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="btn-excluir"] / [data-testid="btn-confirmar-exclusao"] / [data-testid="lista-vazia"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.isDisplayed()', 'Assert.assertTrue'],
@@ -296,7 +296,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')). Veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -429,7 +429,7 @@ class Steps {
     contexto: 'Precisa de pelo menos um lançamento de cada tipo, cadastrados dentro do próprio cenário da questão.',
     dado: 'que acesso a aplicação',
     entao: 'devo ver o lançamento "Salario" na lista',
-    dica: 'O <select> de filtro usa valores internos em inglês: "income" pra Receita e "expense" pra Despesa — não é o texto visível.',
+    dica: 'O <select> de filtro usa valores internos em inglês: "income" pra Receita e "expense" pra Despesa. Não é o texto visível.',
     localizadores:
       '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="tipo-receita"] / [data-testid="tipo-despesa"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="filtro-tipo"] / [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', '.selectByValue()', '.getText()', 'Assert.assertTrue/assertFalse'],
@@ -463,7 +463,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')). Veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {
@@ -610,7 +610,7 @@ class Steps {
     contexto: 'Testa a persistência local dos dados, não um cadastro em si.',
     dado: 'que acesso a aplicação',
     entao: 'devo ver o lançamento "Aluguel" na lista',
-    dica: 'driver.navigate().refresh() recarrega sem apagar o localStorage — diferente de driver.get(\'/\'), que reinicia o estado.',
+    dica: 'driver.navigate().refresh() recarrega sem apagar o localStorage, diferente de driver.get(\'/\'), que reinicia o estado.',
     localizadores:
       '[data-testid="input-nome"] / [data-testid="input-email"] / [data-testid="btn-iniciar"] / [data-testid="btn-nova-transacao"] / [data-testid="input-descricao"] / [data-testid="input-valor"] / [data-testid="input-data"] / [data-testid="btn-salvar"] / [data-testid="nav-lancamentos"] / [data-testid="linha-lancamento"]',
     comandos: ['driver.findElement', '.sendKeys()', '.click()', 'driver.navigate().refresh()', '.getText()', 'Assert.assertTrue'],
@@ -638,7 +638,7 @@ class Steps {
     codigoInicial: `class Page {
   constructor(driver) {
     this.driver = driver;
-    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')) — veja "Localizadores sugeridos" acima.
+    // TODO: monte aqui os localizadores (this.campo = By.cssSelector('...')). Veja "Localizadores sugeridos" acima.
   }
 
   acessarPagina() {

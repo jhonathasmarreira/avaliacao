@@ -11,7 +11,7 @@ export function FeatureDescricao({ questao }: { questao: Questao }) {
   return (
     <div data-testid="questao-descricao" className="questao-descricao">
       <h2>
-        Questão {String(questao.numero).padStart(2, '0')} — {questao.titulo}
+        Questão {String(questao.numero).padStart(2, '0')} - {questao.titulo}
       </h2>
       <p className="questao-contexto">{questao.contexto}</p>
 
@@ -21,7 +21,7 @@ export function FeatureDescricao({ questao }: { questao: Questao }) {
 
       <p className="questao-aviso-this">
         ⚠ Diferente de Java: em JavaScript, campos e métodos da própria classe
-        sempre precisam do prefixo <code>this.</code> — use{' '}
+        sempre precisam do prefixo <code>this.</code>. Use{' '}
         <code>this.page.metodo()</code>, nunca só <code>page.metodo()</code>.
       </p>
 
