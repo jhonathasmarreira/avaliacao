@@ -197,6 +197,63 @@
   color: var(--muted);
 }
 
+.tabela-sql-wrapper {
+  margin: 0 0 14px;
+}
+
+.tabela-sql-nome {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.tabela-sql {
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabela-sql th,
+.tabela-sql td {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  text-align: left;
+}
+
+.tabela-sql th {
+  background: var(--surface2);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.simulador-dissertativa {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  max-width: 640px;
+}
+
+.dissertativa-textarea {
+  width: 100%;
+  min-height: 160px;
+  resize: vertical;
+  background: #14172a;
+  color: #e7e9f5;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  outline: none;
+}
+
+.dissertativa-textarea:focus {
+  border-color: var(--accent);
+}
+
 .questao-aviso-this {
   font-size: 12px;
   color: #b98900;

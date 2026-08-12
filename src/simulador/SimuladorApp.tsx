@@ -37,26 +37,43 @@ export function SimuladorApp({ useStore, questoes, nomeProva, logo, titulo, desc
   }, [fase]);
 
   // Além do beforeunload (que só pega fechar/recarregar), avisa também quando o
-  // candidato troca de aba/janela ou minimiza o navegador durante a prova — não dá
-  // pra bloquear isso, então o aviso aparece só quando ele volta pra essa aba.
+  // candidato sai da aba/janela da avaliação durante a prova — não dá pra bloquear
+  // isso, então o aviso aparece só quando ele volta. Dois sinais diferentes, os dois
+  // necessários: "visibilitychange" pega trocar de aba ou minimizar (a janela some
+  // da tela), mas não pega clicar em outro app num segundo monitor, já que a janela
+  // da avaliação continua visível ali — só perdeu o foco do sistema operacional. Por
+  // isso também escuta blur/focus da window, que cobre esse caso.
   const [ausencias, setAusencias] = useState(0);
   const [avisoAusenciaVisivel, setAvisoAusenciaVisivel] = useState(false);
-  const estavaOcultoRef = useRef(false);
+  const estavaAusenteRef = useRef(false);
 
   useEffect(() => {
     if (fase !== 'simulador') return;
-    function handleVisibilityChange() {
-      if (document.hidden) {
-        estavaOcultoRef.current = true;
-        return;
-      }
-      if (!estavaOcultoRef.current) return;
-      estavaOcultoRef.current = false;
+
+    function marcarAusente() {
+      estavaAusenteRef.current = true;
+    }
+
+    function marcarPresente() {
+      if (!estavaAusenteRef.current) return;
+      estavaAusenteRef.current = false;
       setAusencias((n) => n + 1);
       setAvisoAusenciaVisivel(true);
     }
+
+    function handleVisibilityChange() {
+      if (document.hidden) marcarAusente();
+      else marcarPresente();
+    }
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', marcarAusente);
+    window.addEventListener('focus', marcarPresente);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('blur', marcarAusente);
+      window.removeEventListener('focus', marcarPresente);
+    };
   }, [fase]);
 
   return (

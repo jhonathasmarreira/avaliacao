@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import type { Questao } from '../../simulador/types';
 import { PassosModal } from '../../simulador/components/PassosModal';
+import { TabelaSqlBloco } from '../../simulador/components/TabelaSqlBloco';
 
 // Equivalente ao QuestaoDescricao do simulador Cypress, mas mostrando a
 // feature Gherkin completa (já pronta, só leitura) como um bloco de código,
-// em vez da lista Dado/Quando/Então usada lá.
+// em vez da lista Dado/Quando/Então usada lá. Questões dissertativas (ver
+// Questao.dissertativa) não têm feature nem Page/Steps, então pulam esse
+// bloco e mostram a tabela de referência (Questao.tabelaSql) no lugar.
 export function FeatureDescricao({ questao }: { questao: Questao }) {
   const [passosAbertos, setPassosAbertos] = useState(false);
 
@@ -15,15 +18,21 @@ export function FeatureDescricao({ questao }: { questao: Questao }) {
       </h2>
       <p className="questao-contexto">{questao.contexto}</p>
 
-      <pre data-testid="feature-bloco" className="feature-bloco">
-        {(questao.featureLinhas ?? []).join('\n')}
-      </pre>
+      {questao.dissertativa ? (
+        questao.tabelaSql && <TabelaSqlBloco tabelaSql={questao.tabelaSql} />
+      ) : (
+        <>
+          <pre data-testid="feature-bloco" className="feature-bloco">
+            {(questao.featureLinhas ?? []).join('\n')}
+          </pre>
 
-      <p className="questao-aviso-this">
-        ⚠ Diferente de Java: em JavaScript, campos e métodos da própria classe
-        sempre precisam do prefixo <code>this.</code>. Use{' '}
-        <code>this.page.metodo()</code>, nunca só <code>page.metodo()</code>.
-      </p>
+          <p className="questao-aviso-this">
+            ⚠ Diferente de Java: em JavaScript, campos e métodos da própria classe
+            sempre precisam do prefixo <code>this.</code>. Use{' '}
+            <code>this.page.metodo()</code>, nunca só <code>page.metodo()</code>.
+          </p>
+        </>
+      )}
 
       {questao.localizadores && (
         <p data-testid="questao-localizadores" className="questao-localizadores">

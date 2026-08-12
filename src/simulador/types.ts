@@ -24,10 +24,18 @@ export interface Questao {
    *  campos ficam de fora do codigoInicial de propósito, o candidato quem
    *  escreve `this.campo = By.cssSelector(...)` no construtor da Page. */
   localizadores?: string;
+  /** Quando true, a questão não roda contra o app sob teste: o candidato escreve
+   *  uma resposta livre (ex: um comando SQL) num campo de texto simples, sem
+   *  execução nem correção automática — o avaliador lê a resposta no relatório
+   *  final e corrige manualmente. */
+  dissertativa?: boolean;
+  /** Usado só em questões dissertativas: a tabela de referência (nome + colunas)
+   *  mostrada ao candidato pra ele escrever a consulta em cima dela. */
+  tabelaSql?: { nome: string; colunas: { nome: string; tipo: string }[] };
   codigoInicial: string;
 }
 
-export type StatusQuestao = 'pendente' | 'executando' | 'aprovada' | 'reprovada';
+export type StatusQuestao = 'pendente' | 'executando' | 'aprovada' | 'reprovada' | 'respondida';
 
 export interface LinhaLog {
   tipo: 'comando' | 'sucesso' | 'erro' | 'info';

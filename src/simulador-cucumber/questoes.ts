@@ -1,20 +1,24 @@
 import type { Questao } from '../simulador/types';
 
-// As 3 questões ativas do simulador Cucumber, no modelo Java/Selenium/Page
-// Object: a feature (Gherkin) já vem pronta e é só leitura (featureLinhas); o
-// candidato recebe duas classes pré-montadas — Page (localizadores +
-// construtor prontos) e Steps (@Dado/@Quando/@Então/@E já anotados, Page já
-// instanciada no construtor) — e só precisa preencher o CORPO dos métodos,
-// que vêm com um throw de "pendente" (por isso um envio sem alterações
-// sempre falha, igual aos outros dois simuladores). O WebDriver (`driver`)
-// e os utilitários `By`/`Assert` já vêm prontos, injetados pelo motor —
-// o candidato nunca instancia nada disso.
+// As 4 questões ativas do simulador Cucumber. Nas 3 primeiras, no modelo
+// Java/Selenium/Page Object: a feature (Gherkin) já vem pronta e é só
+// leitura (featureLinhas); o candidato recebe duas classes pré-montadas —
+// Page (localizadores + construtor prontos) e Steps (@Dado/@Quando/@Então/@E
+// já anotados, Page já instanciada no construtor) — e só precisa preencher o
+// CORPO dos métodos, que vêm com um throw de "pendente" (por isso um envio
+// sem alterações sempre falha, igual aos outros dois simuladores). O
+// WebDriver (`driver`) e os utilitários `By`/`Assert` já vêm prontos,
+// injetados pelo motor — o candidato nunca instancia nada disso.
 //
-// Convenção fixa em toda questão: as classes sempre se chamam `Page` e
-// `Steps` (o motor sempre faz `new Steps(driver)` no final). O texto de
-// cada anotação (`// @Dado("...")` etc.) precisa bater exatamente com a
-// linha correspondente da feature — é assim que o motor liga uma coisa à
-// outra, igual à reflection real do Cucumber-JVM.
+// Convenção fixa em toda questão de código: as classes sempre se chamam
+// `Page` e `Steps` (o motor sempre faz `new Steps(driver)` no final). O
+// texto de cada anotação (`// @Dado("...")` etc.) precisa bater exatamente
+// com a linha correspondente da feature — é assim que o motor liga uma
+// coisa à outra, igual à reflection real do Cucumber-JVM.
+//
+// A última questão é dissertativa (ver Questao.dissertativa em
+// ../simulador/types.ts): não tem feature nem Page/Steps, é uma resposta em
+// texto livre corrigida manualmente pelo avaliador.
 //
 // Existem mais 5 questões fora deste conjunto ativo, guardadas em
 // ./questoes-arquivadas.ts para uso futuro (ex: montar uma prova mais longa,
@@ -336,5 +340,32 @@ class Steps {
     ${pendente('devoVerOLancamentoNaLista')}
   }
 }`,
+  },
+  {
+    numero: 4,
+    titulo: 'Deve retornar apenas as colunas necessárias em uma consulta SQL',
+    contexto:
+      'Questão dissertativa: diferente das outras, aqui você não escreve um teste automatizado nem interage com o app sob teste. Escreva o comando SQL na caixa de texto abaixo. A correção é manual, feita pelo avaliador depois.',
+    dado: 'que existe uma tabela lancamentos no banco de dados, com as colunas ao lado',
+    entao: 'o candidato deve escrever um comando SELECT que retorne apenas as colunas descricao e valor dessa tabela',
+    dica: 'Use SELECT com a lista de colunas separada por vírgula, não SELECT *.',
+    dissertativa: true,
+    tabelaSql: {
+      nome: 'lancamentos',
+      colunas: [
+        { nome: 'id', tipo: 'INT' },
+        { nome: 'descricao', tipo: 'VARCHAR(100)' },
+        { nome: 'valor', tipo: 'DECIMAL(10,2)' },
+        { nome: 'tipo', tipo: "VARCHAR(10) ('receita' ou 'despesa')" },
+        { nome: 'categoria', tipo: 'VARCHAR(50)' },
+        { nome: 'data', tipo: 'DATE' },
+      ],
+    },
+    passos: [
+      'Identifique quais colunas a questão pede: descricao e valor.',
+      'Escreva um SELECT informando só essas colunas, separadas por vírgula (não use SELECT *).',
+      'Informe a cláusula FROM com o nome da tabela: lancamentos.',
+    ],
+    codigoInicial: '-- Escreva seu SELECT aqui\n',
   },
 ];

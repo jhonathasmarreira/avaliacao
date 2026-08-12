@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Questao } from '../types';
 import { PassosModal } from './PassosModal';
+import { TabelaSqlBloco } from './TabelaSqlBloco';
 
 // Assertions aceitas pelo primeiro argumento de cy.get(...).should(...) —
 // ver checkShould em miniCy/asserts.ts. Exibida só quando a questão sugere
@@ -48,6 +49,7 @@ export function QuestaoDescricao({ questao }: { questao: Questao }) {
           <strong>Então</strong> {questao.entao}
         </li>
       </ul>
+      {questao.tabelaSql && <TabelaSqlBloco tabelaSql={questao.tabelaSql} />}
       {questao.passos && questao.passos.length > 0 && (
         <button
           data-testid="btn-ver-passos"

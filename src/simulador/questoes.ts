@@ -1,14 +1,18 @@
 import type { Questao } from './types';
 
-// As 3 questões ativas do simulador. Cada uma descreve um cenário no formato
-// Dado/Quando/Então (mesma convenção usada no restante do projeto) e traz
-// o código inicial que o candidato edita no editor embutido. O comando
-// cy.implementeAqui() sempre falha — é o sinal de "questão pendente";
-// o candidato apaga essa linha e escreve a implementação real por baixo,
-// usando a API cy.* do simulador (documentada no painel de ajuda da tela).
-// `comandos` só nomeia os comandos esperados (get, should, etc.), sem
+// As 4 questões ativas do simulador. As 3 primeiras descrevem um cenário no
+// formato Dado/Quando/Então (mesma convenção usada no restante do projeto) e
+// trazem o código inicial que o candidato edita no editor embutido. O
+// comando cy.implementeAqui() sempre falha — é o sinal de "questão
+// pendente"; o candidato apaga essa linha e escreve a implementação real por
+// baixo, usando a API cy.* do simulador (documentada no painel de ajuda da
+// tela). `comandos` só nomeia os comandos esperados (get, should, etc.), sem
 // explicar como usá-los. `passos` é o passo a passo detalhado, exibido só
 // quando o candidato clica no botão "Ver passo a passo" na tela da questão.
+//
+// A última questão é dissertativa (ver Questao.dissertativa em ./types.ts):
+// não roda contra o app sob teste, é uma resposta em texto livre corrigida
+// manualmente pelo avaliador.
 //
 // Existem mais 17 questões fora deste conjunto ativo, guardadas em
 // ./questoes-arquivadas.ts para uso futuro (ex: montar uma prova mais longa,
@@ -71,5 +75,32 @@ export const QUESTOES: Questao[] = [
       'Confirme que a linha do lançamento recém-criado aparece na lista, contendo a descrição informada.',
     ],
     codigoInicial: `cy.visit('/');\n${STUB}`,
+  },
+  {
+    numero: 4,
+    titulo: 'Deve retornar apenas as colunas necessárias em uma consulta SQL',
+    contexto:
+      'Questão dissertativa: diferente das outras, aqui você não escreve um teste automatizado nem interage com o app sob teste. Escreva o comando SQL na caixa de texto abaixo. A correção é manual, feita pelo avaliador depois.',
+    dado: 'que existe uma tabela lancamentos no banco de dados, com as colunas ao lado',
+    entao: 'o candidato deve escrever um comando SELECT que retorne apenas as colunas descricao e valor dessa tabela',
+    dica: 'Use SELECT com a lista de colunas separada por vírgula, não SELECT *.',
+    dissertativa: true,
+    tabelaSql: {
+      nome: 'lancamentos',
+      colunas: [
+        { nome: 'id', tipo: 'INT' },
+        { nome: 'descricao', tipo: 'VARCHAR(100)' },
+        { nome: 'valor', tipo: 'DECIMAL(10,2)' },
+        { nome: 'tipo', tipo: "VARCHAR(10) ('receita' ou 'despesa')" },
+        { nome: 'categoria', tipo: 'VARCHAR(50)' },
+        { nome: 'data', tipo: 'DATE' },
+      ],
+    },
+    passos: [
+      'Identifique quais colunas a questão pede: descricao e valor.',
+      'Escreva um SELECT informando só essas colunas, separadas por vírgula (não use SELECT *).',
+      'Informe a cláusula FROM com o nome da tabela: lancamentos.',
+    ],
+    codigoInicial: '-- Escreva seu SELECT aqui\n',
   },
 ];

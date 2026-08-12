@@ -5,8 +5,11 @@ import { executarQuestaoJava } from '../miniSelenium/runner';
 import type { SandboxController } from '../../simulador/types';
 import { SandboxFrame } from '../../simulador/components/SandboxFrame';
 import { ResultadoLogPanel } from '../../simulador/components/ResultadoLogPanel';
+import { RespostaDissertativa } from '../../simulador/components/RespostaDissertativa';
 import { FeatureDescricao } from '../components/FeatureDescricao';
 import { JavaEditor } from '../components/JavaEditor';
+
+const STATUS_RESPONDIDAS: Array<string> = ['aprovada', 'reprovada', 'respondida'];
 
 export function SimuladorPage() {
   const questaoAtual = useSimuladorCucumberStore((s) => s.questaoAtual);
@@ -23,12 +26,12 @@ export function SimuladorPage() {
 
   const questao = QUESTOES.find((q) => q.numero === questaoAtual) ?? QUESTOES[0];
   const resposta = respostas[questao.numero];
-  // Só a contagem de quantas questões já foram executadas, não quantas passaram:
-  // durante a prova o candidato não deve ver se acertou ou errou.
-  const respondidas = QUESTOES.filter(
-    (q) => respostas[q.numero]?.status === 'aprovada' || respostas[q.numero]?.status === 'reprovada'
+  // Só a contagem de quantas questões já foram executadas/respondidas, não quantas
+  // passaram: durante a prova o candidato não deve ver se acertou ou errou.
+  const respondidas = QUESTOES.filter((q) =>
+    STATUS_RESPONDIDAS.includes(respostas[q.numero]?.status ?? 'pendente')
   ).length;
-  const jaExecutou = resposta.status === 'aprovada' || resposta.status === 'reprovada';
+  const jaExecutou = STATUS_RESPONDIDAS.includes(resposta.status);
   const proximaQuestao = QUESTOES.find((q) => q.numero === questao.numero + 1);
 
   const handleReady = useCallback((controller: SandboxController) => {
@@ -42,6 +45,13 @@ export function SimuladorPage() {
     const resultado = await executarQuestaoJava(sandboxRef.current, questao.featureLinhas ?? [], resposta.codigo);
     registrarResultado(questao.numero, resultado);
     setRodando(false);
+  }
+
+  function salvarResposta() {
+    registrarResultado(questao.numero, {
+      status: 'respondida',
+      log: [{ tipo: 'info', texto: 'Resposta registrada.' }],
+    });
   }
 
   return (
@@ -62,8 +72,9 @@ export function SimuladorPage() {
         <ul data-testid="lista-questoes" className="lista-questoes">
           {QUESTOES.map((q) => {
             const status = respostas[q.numero]?.status ?? 'pendente';
-            // Exibição não diferencia aprovada/reprovada: só se já foi executada ou não.
-            const executada = status === 'aprovada' || status === 'reprovada';
+            // Exibição não diferencia aprovada/reprovada/respondida: só se já foi
+            // concluída ou não.
+            const executada = STATUS_RESPONDIDAS.includes(status);
             const classeStatus = executada ? 'executada' : status;
             return (
               <li key={q.numero}>
@@ -91,16 +102,16 @@ export function SimuladorPage() {
       <main className="simulador-main">
         <FeatureDescricao questao={questao} />
 
-        <div className="simulador-painel">
-          <div className="simulador-editor">
-            <JavaEditor
+        {questao.dissertativa ? (
+          <div className="simulador-dissertativa">
+            <RespostaDissertativa
               value={resposta.codigo}
-              onChange={(codigo) => atualizarCodigo(questao.numero, codigo)}
-              onExecutar={executar}
+              onChange={(texto) => atualizarCodigo(questao.numero, texto)}
+              onSalvar={salvarResposta}
             />
             <div className="simulador-editor-acoes">
-              <button data-testid="btn-executar" className="btn-primary" onClick={executar} disabled={rodando}>
-                {rodando ? 'Executando…' : 'Executar teste (Ctrl+Enter)'}
+              <button data-testid="btn-salvar-resposta" className="btn-primary" onClick={salvarResposta}>
+                Salvar resposta (Ctrl+Enter)
               </button>
               {jaExecutou && proximaQuestao && (
                 <button
@@ -112,26 +123,53 @@ export function SimuladorPage() {
                 </button>
               )}
               <span data-testid="questao-status" className="questao-badge">
-                {resposta.status === 'executando'
-                  ? 'executando'
-                  : jaExecutou
-                    ? 'executado'
-                    : 'pendente'}
+                {jaExecutou ? 'respondida' : 'pendente'}
               </span>
             </div>
-            <ResultadoLogPanel log={resposta.log} />
           </div>
+        ) : (
+          <div className="simulador-painel">
+            <div className="simulador-editor">
+              <JavaEditor
+                value={resposta.codigo}
+                onChange={(codigo) => atualizarCodigo(questao.numero, codigo)}
+                onExecutar={executar}
+              />
+              <div className="simulador-editor-acoes">
+                <button data-testid="btn-executar" className="btn-primary" onClick={executar} disabled={rodando}>
+                  {rodando ? 'Executando…' : 'Executar teste (Ctrl+Enter)'}
+                </button>
+                {jaExecutou && proximaQuestao && (
+                  <button
+                    data-testid="btn-proxima-questao"
+                    className="btn-secondary"
+                    onClick={() => irPara(proximaQuestao.numero)}
+                  >
+                    Próxima questão →
+                  </button>
+                )}
+                <span data-testid="questao-status" className="questao-badge">
+                  {resposta.status === 'executando'
+                    ? 'executando'
+                    : jaExecutou
+                      ? 'executado'
+                      : 'pendente'}
+                </span>
+              </div>
+              <ResultadoLogPanel log={resposta.log} />
+            </div>
 
-          <div className="simulador-sandbox">
-            <p className="simulador-sandbox-titulo">App sob teste</p>
-            <p className="simulador-sandbox-legenda">
-              Aplicação financeira fictícia que seu Page Object testa. Ela tem seu próprio login
-              (nome/e-mail de mentira, diferente da sua identificação) que quase todo teste
-              precisa passar antes de chegar no Dashboard.
-            </p>
-            <SandboxFrame onReady={handleReady} />
+            <div className="simulador-sandbox">
+              <p className="simulador-sandbox-titulo">App sob teste</p>
+              <p className="simulador-sandbox-legenda">
+                Aplicação financeira fictícia que seu Page Object testa. Ela tem seu próprio login
+                (nome/e-mail de mentira, diferente da sua identificação) que quase todo teste
+                precisa passar antes de chegar no Dashboard.
+              </p>
+              <SandboxFrame onReady={handleReady} />
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );

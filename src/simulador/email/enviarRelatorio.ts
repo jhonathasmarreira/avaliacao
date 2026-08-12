@@ -6,8 +6,20 @@ export interface EnvioResultado {
   motivo?: string;
 }
 
+// Questões dissertativas (ver Questao.dissertativa) não são corrigidas
+// automaticamente — não entram na conta de aprovadas/total, e a resposta em
+// texto livre do candidato vai destacada à parte no resumo, pro avaliador ler
+// e corrigir manualmente.
+function questoesAutomaticas(questoes: Questao[]): Questao[] {
+  return questoes.filter((q) => !q.dissertativa);
+}
+
 export function contarAprovadas(questoes: Questao[], respostas: Record<number, Resposta>): number {
-  return questoes.filter((q) => respostas[q.numero]?.status === 'aprovada').length;
+  return questoesAutomaticas(questoes).filter((q) => respostas[q.numero]?.status === 'aprovada').length;
+}
+
+export function contarTotalAutomaticas(questoes: Questao[]): number {
+  return questoesAutomaticas(questoes).length;
 }
 
 export function montarResumoTexto(
@@ -17,24 +29,48 @@ export function montarResumoTexto(
   nomeProva: string
 ): string {
   const aprovadas = contarAprovadas(questoes, respostas);
-  const linhas = questoes.map((q) => {
-    const r = respostas[q.numero];
-    const status = r?.status === 'aprovada' ? 'OK' : r?.status === 'reprovada' ? 'FALHOU' : 'PENDENTE';
-    return `[${status}] Questão ${String(q.numero).padStart(2, '0')} - ${q.titulo}`;
-  }).join('\n');
+  const totalAutomaticas = contarTotalAutomaticas(questoes);
 
-  return [
+  const linhas = questoes
+    .map((q) => {
+      const r = respostas[q.numero];
+      const status = q.dissertativa
+        ? r?.status === 'respondida'
+          ? 'RESPONDIDA'
+          : 'PENDENTE'
+        : r?.status === 'aprovada'
+          ? 'OK'
+          : r?.status === 'reprovada'
+            ? 'FALHOU'
+            : 'PENDENTE';
+      const sufixo = q.dissertativa ? ' (dissertativa, correção manual)' : '';
+      return `[${status}] Questão ${String(q.numero).padStart(2, '0')} - ${q.titulo}${sufixo}`;
+    })
+    .join('\n');
+
+  const dissertativas = questoes.filter((q) => q.dissertativa);
+  const partes = [
     `Resultado da avaliação técnica - ${nomeProva}`,
     '',
     `Candidato: ${candidato.nomeCompleto}`,
     `E-mail: ${candidato.email}`,
     `Data: ${new Date().toLocaleString('pt-BR')}`,
     '',
-    `Aprovadas: ${aprovadas}/${questoes.length}`,
+    `Aprovadas: ${aprovadas}/${totalAutomaticas}`,
     '',
     'Detalhamento por questão:',
     linhas,
-  ].join('\n');
+  ];
+
+  if (dissertativas.length > 0) {
+    partes.push('', 'Respostas dissertativas (correção manual):');
+    for (const q of dissertativas) {
+      const resposta = (respostas[q.numero]?.codigo ?? '').trim();
+      partes.push('', `Questão ${String(q.numero).padStart(2, '0')} - ${q.titulo}:`, resposta || '(sem resposta)');
+    }
+  }
+
+  return partes.join('\n');
 }
 
 export async function enviarRelatorio(
@@ -64,7 +100,7 @@ export async function enviarRelatorio(
         candidato_nome: candidato.nomeCompleto,
         candidato_email: candidato.email,
         aprovadas,
-        total: questoes.length,
+        total: contarTotalAutomaticas(questoes),
         resumo: montarResumoTexto(questoes, candidato, respostas, nomeProva),
       },
       { publicKey }

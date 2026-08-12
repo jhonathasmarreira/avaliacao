@@ -17,7 +17,11 @@ export interface SimuladorState {
   marcarExecutando: (numero: number) => void;
   registrarResultado: (
     numero: number,
-    resultado: { status: Extract<StatusQuestao, 'aprovada' | 'reprovada'>; log: LinhaLog[]; erro?: string }
+    resultado: {
+      status: Extract<StatusQuestao, 'aprovada' | 'reprovada' | 'respondida'>;
+      log: LinhaLog[];
+      erro?: string;
+    }
   ) => void;
   finalizarAvaliacao: () => void;
   setEnvioStatus: (status: EnvioStatus, motivo?: string) => void;
