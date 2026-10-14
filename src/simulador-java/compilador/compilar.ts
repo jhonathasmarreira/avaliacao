@@ -935,6 +935,9 @@ class Compilador {
     if (j === k + 2 && this.ehIdent(k + 1)) {
       const nome = this.V(k + 1);
       if (!locais.has(nome) && !classe.campos.has(nome) && !VALORES.has(nome)) this.set(k + 1, `'${nome}'`);
+    } else if (j > k + 2 && this.ehIdent(k + 1) && this.V(k + 2) === '.') {
+      // "case TipoLancamento.RECEITA:" (Java 21): normalizado do mesmo jeito que o valor do switch.
+      this.envolver(k + 1, j - 1, '__sw(');
     }
   }
 
