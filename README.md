@@ -31,12 +31,18 @@ e configurar o envio de e-mail.
 
 ## Rotas
 
-O simulador **não** fica na raiz do site. A raiz (`/`) serve uma página 404
-neutra, que não deve ser enviada a ninguém. O link do simulador — o que deve
-ser enviado ao candidato — é `/cypress-test`:
+Os simuladores **não** ficam na raiz do site. A raiz (`/`) serve uma página
+404 neutra, que não deve ser enviada a ninguém. Cada prova tem seu próprio
+link — é ele que deve ser enviado ao candidato:
 
-- Dev: `http://localhost:5173/cypress-test/`
-- Produção: `https://SEU_USUARIO.github.io/avaliacao/cypress-test`
+| Prova | Dev | Produção |
+| --- | --- | --- |
+| Cypress | `http://localhost:5173/cypress-test/` | `https://SEU_USUARIO.github.io/avaliacao/cypress-test` |
+| Cucumber (Java/Selenium) | `http://localhost:5173/cucumber-test/` | `https://SEU_USUARIO.github.io/avaliacao/cucumber-test` |
+| Java Pleno | `http://localhost:5173/java-test/` | `https://SEU_USUARIO.github.io/avaliacao/java-test` |
+
+Todas terminam com a mesma questão dissertativa de SQL
+(`src/simulador/questaoSql.ts`).
 
 ## Comandos
 
@@ -70,6 +76,17 @@ src/simulador/
   store/useSimuladorStore.ts progresso da prova (persistido separado do app sob teste)
   email/enviarRelatorio.ts  monta e envia o relatório final via EmailJS
   components/, pages/       telas do simulador (identificação, editor, sandbox, relatório)
+  questaoSql.ts             questão dissertativa de SQL compartilhada pelas três provas
+
+src/simulador-cucumber/     prova Cucumber (Page/Steps em JS estilo Java + mini Selenium)
+
+src/simulador-java/         prova Java Pleno (src/java-main.tsx, java-test/index.html)
+  questoes.ts               3 questões de Java (coleções, streams, exceções) + SQL
+  compilador/               lexer + compilador de um subconjunto de Java para JS
+  runtime/javaRuntime.ts    biblioteca padrão emulada (List, Map, Stream, Collectors, Optional...)
+  runtime/testes.ts         suítes de teste ocultas de cada questão
+  runtime/worker.ts         executa os testes num Web Worker (timeout de 5 s, sem travar a aba)
+  autocomplete.ts           autocomplete do editor (membros estáticos, métodos, snippets)
 
 .github/workflows/deploy.yml  CI: só builda e publica no GitHub Pages (não roda teste, não envia e-mail)
 ```

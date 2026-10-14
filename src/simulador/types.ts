@@ -32,6 +32,9 @@ export interface Questao {
   /** Usado só em questões dissertativas: a tabela de referência (nome + colunas)
    *  mostrada ao candidato pra ele escrever a consulta em cima dela. */
   tabelaSql?: { nome: string; colunas: { nome: string; tipo: string }[] };
+  /** Usado só pelo simulador Java Pleno: código-fonte (só leitura) das classes
+   *  que o candidato pode usar, mas não edita (ex: Lancamento). */
+  classesApoio?: string;
   codigoInicial: string;
 }
 

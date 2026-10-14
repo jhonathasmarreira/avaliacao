@@ -328,7 +328,7 @@
 
 .simulador-painel {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 20px;
   margin-top: 16px;
 }
@@ -433,6 +433,6 @@
     border-bottom: 1px solid var(--border);
   }
   .simulador-painel {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }

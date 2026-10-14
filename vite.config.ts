@@ -13,6 +13,7 @@ export default defineConfig({
         main: resolve(raiz, 'index.html'),
         cypressTest: resolve(raiz, 'cypress-test/index.html'),
         cucumberTest: resolve(raiz, 'cucumber-test/index.html'),
+        javaTest: resolve(raiz, 'java-test/index.html'),
         sandbox: resolve(raiz, 'sandbox.html'),
       },
     },

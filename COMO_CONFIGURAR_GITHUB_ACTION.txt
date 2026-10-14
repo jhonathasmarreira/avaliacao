@@ -36,8 +36,10 @@ Actions) builda e publica o site automaticamente.
 
 IMPORTANTE: a raiz do site (https://SEU_USUARIO.github.io/avaliacao/)
 não deve ser enviada ao candidato — ela só mostra uma página 404
-genérica, de propósito. O link do simulador de avaliação é:
+genérica, de propósito. Os links dos simuladores de avaliação são:
   https://SEU_USUARIO.github.io/avaliacao/cypress-test
+  https://SEU_USUARIO.github.io/avaliacao/cucumber-test
+  https://SEU_USUARIO.github.io/avaliacao/java-test
 
 
 PASSO 2 — CRIAR UMA CONTA NO EMAILJS
