@@ -15,7 +15,7 @@ createRoot(document.getElementById('root')!).render(
       nomeProva="Simulador Java Pleno"
       logo="☕"
       titulo="Simulador Java Pleno - Avaliação Técnica"
-      descricao={`${QUESTOES.length} questões: 3 práticas de Java (coleções, streams, exceções) compiladas e testadas direto no navegador, e 1 de SQL. Ao final, o resultado é enviado por e-mail automaticamente.`}
+      descricao={`${QUESTOES.length} questões: 2 práticas de Java (coleções e streams) compiladas e testadas direto no navegador, e 1 de SQL. Ao final, o resultado é enviado por e-mail automaticamente.`}
     >
       <SimuladorPage />
     </SimuladorApp>

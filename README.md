@@ -81,7 +81,7 @@ src/simulador/
 src/simulador-cucumber/     prova Cucumber (Page/Steps em JS estilo Java + mini Selenium)
 
 src/simulador-java/         prova Java Pleno (src/java-main.tsx, java-test/index.html)
-  questoes.ts               3 questões de Java (coleções, streams, exceções) + SQL
+  questoes.ts               2 questões de Java (coleções e streams) + SQL
   compilador/               lexer + compilador de um subconjunto de Java para JS
   runtime/javaRuntime.ts    biblioteca padrão emulada (List, Map, Stream, Collectors, Optional...)
   runtime/testes.ts         suítes de teste ocultas de cada questão

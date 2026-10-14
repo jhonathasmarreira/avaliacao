@@ -1,7 +1,7 @@
 import type { Questao } from '../simulador/types';
 import { questaoSql } from '../simulador/questaoSql';
 
-// As 4 questões do simulador Java Pleno. Nas 3 primeiras o candidato escreve
+// As 3 questões do simulador Java Pleno. Nas 2 primeiras o candidato escreve
 // Java "de verdade" (um subconjunto: classes, enums, coleções, streams,
 // lambdas, exceções) que é compilado no navegador (./compilador) e executado
 // contra uma suíte de testes oculta (./runtime/testes.ts), igual aos outros
@@ -98,35 +98,5 @@ public class RelatorioDespesas {
 }
 `,
   },
-  {
-    numero: 3,
-    titulo: 'Ranking das maiores despesas',
-    contexto:
-      'O dashboard exibe as n maiores despesas. Ordene da maior para a menor pelo valor; em caso de empate, pela descrição em ordem alfabética. Se n for negativo, lance IllegalArgumentException com a mensagem exata "n não pode ser negativo". Se n for maior que a quantidade de despesas, retorne todas. A lista recebida não pode ser alterada.',
-    dado: 'uma lista de lançamentos e um número n',
-    quando: 'chamo maioresDespesas(lancamentos, n)',
-    entao: 'devo receber as n maiores despesas, da maior para a menor, desempatando pela descrição',
-    dica: 'Comparator.comparing(Lancamento::getValor).reversed().thenComparing(Lancamento::getDescricao)',
-    comandos: ['stream().filter(...)', 'sorted(Comparator...)', 'limit(n)', 'Collectors.toList()', 'new ArrayList<>(lista)'],
-    passos: [
-      'Valide n: se for negativo, lance IllegalArgumentException("n não pode ser negativo").',
-      'Filtre apenas as despesas (sem alterar a lista recebida).',
-      'Ordene por valor decrescente e, no empate, por descrição crescente.',
-      'Retorne no máximo n lançamentos.',
-    ],
-    classesApoio: CLASSES_APOIO,
-    codigoInicial: `import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class RankingDespesas {
-
-    public List<Lancamento> maioresDespesas(List<Lancamento> lancamentos, int n) {
-        ${pendente('maioresDespesas')}
-    }
-}
-`,
-  },
-  questaoSql(4),
+  questaoSql(3),
 ];

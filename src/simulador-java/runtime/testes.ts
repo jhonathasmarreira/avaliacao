@@ -1,10 +1,7 @@
 import {
   ArrayList,
-  IllegalArgumentException,
   Lancamento,
   TipoLancamento,
-  Throwable,
-  __jex,
   jstr,
 } from './javaRuntime';
 
@@ -69,14 +66,6 @@ function esperarMapa(obtido: Qualquer): Qualquer {
   return obtido;
 }
 
-function esperarLista(obtido: Qualquer): Qualquer {
-  if (obtido == null) falhar('o método retornou null; esperado uma List (mesmo que vazia)');
-  if (typeof obtido.get !== 'function' || typeof obtido.size !== 'function') {
-    falhar(`esperado uma List<Lancamento>, mas o método retornou ${fmt(obtido)}`);
-  }
-  return obtido;
-}
-
 function descricoes(l: Qualquer): string[] {
   const r: string[] = [];
   for (let i = 0; i < l.size(); i++) {
@@ -84,32 +73,6 @@ function descricoes(l: Qualquer): string[] {
     r.push(item instanceof Lancamento ? item.getDescricao() : jstr(item));
   }
   return r;
-}
-
-function esperarDescricoes(obtido: Qualquer, esperado: string[]) {
-  const l = esperarLista(obtido);
-  const atual = descricoes(l);
-  if (atual.join('|') !== esperado.join('|')) {
-    falhar(`esperado [${esperado.join(', ')}], obtido [${atual.join(', ')}]`);
-  }
-}
-
-function esperarExcecao(acao: () => void, classe: typeof Throwable, mensagem: string) {
-  try {
-    acao();
-  } catch (bruto) {
-    if (bruto instanceof FalhaTeste) throw bruto;
-    const e: Throwable = __jex(bruto);
-    const lancada = e.toString();
-    if (!(e instanceof classe)) {
-      falhar(`esperada ${classe.name}("${mensagem}"), mas foi lançada ${lancada}`);
-    }
-    if (e.getMessage() !== mensagem) {
-      falhar(`${classe.name} lançada com a mensagem ${fmt(e.getMessage())}; esperada ${fmt(mensagem)}`);
-    }
-    return;
-  }
-  falhar(`esperada ${classe.name}("${mensagem}"), mas nenhuma exceção foi lançada`);
 }
 
 function esperarInalterada(original: Qualquer, descricoesAntes: string[]) {
@@ -217,84 +180,6 @@ export const SUITES: Record<number, Suite> = {
           );
           const antes = descricoes(entrada);
           ctx.novo().totalPorCategoria(entrada);
-          esperarInalterada(entrada, antes);
-        },
-      },
-    ],
-  },
-
-  3: {
-    classe: 'RankingDespesas',
-    metodo: 'maioresDespesas',
-    casos: [
-      {
-        nome: 'maioresDespesas com n negativo deve lançar IllegalArgumentException',
-        rodar: (ctx) =>
-          esperarExcecao(
-            () => ctx.novo().maioresDespesas(lista(lanc('Mercado', 300, DESPESA, 'Alimentação')), -1),
-            IllegalArgumentException,
-            'n não pode ser negativo'
-          ),
-      },
-      {
-        nome: 'maioresDespesas deve retornar as n maiores despesas, da maior para a menor',
-        rodar: (ctx) =>
-          esperarDescricoes(
-            ctx.novo().maioresDespesas(
-              lista(
-                lanc('Mercado', 300, DESPESA, 'Alimentação'),
-                lanc('Uber', 45, DESPESA, 'Transporte'),
-                lanc('Salário', 5000, RECEITA, 'Salário'),
-                lanc('Aluguel', 1500, DESPESA, 'Moradia'),
-                lanc('Cinema', 60, DESPESA, 'Lazer')
-              ),
-              3
-            ),
-            ['Aluguel', 'Mercado', 'Cinema']
-          ),
-      },
-      {
-        nome: 'maioresDespesas com valores iguais deve desempatar pela descrição, em ordem alfabética',
-        rodar: (ctx) =>
-          esperarDescricoes(
-            ctx.novo().maioresDespesas(
-              lista(
-                lanc('Teatro', 100, DESPESA, 'Lazer'),
-                lanc('Padaria', 50, DESPESA, 'Alimentação'),
-                lanc('Academia', 100, DESPESA, 'Saúde'),
-                lanc('Livros', 100, DESPESA, 'Educação')
-              ),
-              3
-            ),
-            ['Academia', 'Livros', 'Teatro']
-          ),
-      },
-      {
-        nome: 'maioresDespesas com n maior que a quantidade de despesas deve retornar todas',
-        rodar: (ctx) =>
-          esperarDescricoes(
-            ctx.novo().maioresDespesas(
-              lista(lanc('Uber', 45, DESPESA, 'Transporte'), lanc('Salário', 5000, RECEITA, 'Salário'), lanc('Mercado', 300, DESPESA, 'Alimentação')),
-              10
-            ),
-            ['Mercado', 'Uber']
-          ),
-      },
-      {
-        nome: 'maioresDespesas com n igual a 0 deve retornar lista vazia',
-        rodar: (ctx) => esperarDescricoes(ctx.novo().maioresDespesas(lista(lanc('Uber', 45, DESPESA, 'Transporte')), 0), []),
-      },
-      {
-        nome: 'maioresDespesas não deve alterar a lista recebida',
-        rodar: (ctx) => {
-          const entrada = lista(
-            lanc('Uber', 45, DESPESA, 'Transporte'),
-            lanc('Salário', 5000, RECEITA, 'Salário'),
-            lanc('Aluguel', 1500, DESPESA, 'Moradia'),
-            lanc('Mercado', 300, DESPESA, 'Alimentação')
-          );
-          const antes = descricoes(entrada);
-          ctx.novo().maioresDespesas(entrada, 2);
           esperarInalterada(entrada, antes);
         },
       },
